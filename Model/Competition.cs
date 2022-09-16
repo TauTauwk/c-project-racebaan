@@ -14,8 +14,15 @@ namespace Model
 
         public Track NextTrack() 
         {
-            Track i = Tracks.FirstOrDefault();
-            return i;
+            if (Tracks.Count != 0)
+            {
+                return Tracks.First();
+                Tracks.Dequeue();
+            }
+            else 
+            {
+                return null;
+            }
         }
     }
 }

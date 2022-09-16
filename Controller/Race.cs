@@ -13,12 +13,31 @@ namespace Controller
         public List<IParticipant> Participants { get; set; }
         public DateTime StartTime { get; set; }
 
-        private Random _random;
+        private Random _random = new Random(DateTime.Now.Millisecond);
         private Dictionary<Section, SectionData> _positions;
 
         public SectionData GetSectionData(Section section) 
-        {
+        {            
+            if (!(_positions.ContainsKey(section)))
+            {
+                _positions[section] = new SectionData();
+            }
+            return _positions[section];
+        }
 
+        public Race(Track track, List<IParticipant> participants)
+        {
+            Track = track;
+            Participants = participants;
+        }
+
+        public void RandomizeEquipment() 
+        {
+            foreach (var participant in Participants) 
+            {
+                _random.Next(participant.Equipment.Quality);
+                _random.Next(participant.Equipment.Performance);
+            }
         }
     }
 }
