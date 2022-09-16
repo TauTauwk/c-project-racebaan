@@ -35,8 +35,8 @@ namespace Controller
         {
             foreach (var participant in Participants) 
             {
-                _random.Next(participant.Equipment.Quality);
-                _random.Next(participant.Equipment.Performance);
+                participant.Equipment.Quality = _random.Next(100);
+                participant.Equipment.Performance = _random.Next(100);
             }
         }
     }

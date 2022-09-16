@@ -71,7 +71,6 @@ namespace Controller
             {
                 CurrentRace = new Race(track, Competition.Participants);
             }
-
         }
     }
 }
