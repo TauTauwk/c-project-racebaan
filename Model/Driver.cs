@@ -8,10 +8,10 @@ namespace Model
 {
     public class Driver : IParticipant
     {
-        public string Name { get; }
-        public int Points { get; }
-        public IEquipment Equipment { get; }
-        public TeamColors TeamColor { get; }
+        public string Name { get; set; }
+        public int Points { get; set; }
+        public IEquipment Equipment { get; set; }
+        public TeamColors TeamColor { get; set; }
 
         public Driver(string name, int points, IEquipment equipment, TeamColors teamColor)
         {

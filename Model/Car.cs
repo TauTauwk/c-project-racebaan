@@ -9,10 +9,10 @@ namespace Model
 {
     public class Car : IEquipment
     {
-        public int Quality { get; }
-        public int Performance { get; }
-        public int Speed { get; }
-        public bool IsBroken { get; }
+        public int Quality { get; set; }
+        public int Performance { get; set; }
+        public int Speed { get; set; }
+        public bool IsBroken { get; set; }
 
         public Car(int quality, int performance, int speed, bool isBroken)
         {
