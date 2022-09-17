@@ -21,5 +21,6 @@ namespace Model
             Speed = speed;
             IsBroken = isBroken;
         }
+
     }
 }

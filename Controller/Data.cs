@@ -13,6 +13,8 @@ namespace Controller
         static private Race currentRace;
         static public Competition Competition { get; set; }
         static public Race CurrentRace { get; set; }
+        static private int num =  0;
+        static private int trackNum = 0;
 
         static public void Initialize()
         {
@@ -21,15 +23,31 @@ namespace Controller
             Competition.Tracks = new Queue<Track>();
             CurrentRace = currentRace;
 
-            Car a = new Car(100, 100, 100, false);
-            Driver b = new Driver("driver1", 0, a, TeamColors.Blue);
-            Car c = new Car(100, 100, 100, false);
-            Driver d = new Driver("driver2", 0, c, TeamColors.Red);
-            Car e = new Car(100, 100, 100, false);
-            Driver f = new Driver("driver3", 0, e, TeamColors.Green);
-            AddParticipant(b);
-            AddParticipant(d);
-            AddParticipant(f);
+            AddParticipant();
+            AddParticipant();
+            AddParticipant();
+            AddParticipant();
+            AddParticipant();
+            AddParticipant();
+
+            AddTrack();
+            AddTrack();
+        }
+
+        static public void AddParticipant()
+        {
+            num++;
+            int teamColor = (num % 5);
+
+            Car car = new Car(100, 100, 100, false);
+            Driver driver = new Driver("driver" + num, 0, car, (TeamColors)teamColor);
+            Competition.Participants.Add(driver);
+        }
+
+        static public void AddTrack()
+        {
+            trackNum++;
+            trackNum = (trackNum % 2);
 
             var l = SectionTypes.LeftCorner;
             var r = SectionTypes.RightCorner;
@@ -37,31 +55,24 @@ namespace Controller
             var s = SectionTypes.Straight;
             var F = SectionTypes.Finish;
 
-            SectionTypes[] sectionsTrack1 = new SectionTypes[8]
+            if (trackNum == 1)
             {
-                S, l, l, s, s, l, l ,F
-            };
-
-            SectionTypes[] sectionsTrack2 = new SectionTypes[16]
+                SectionTypes[] track1 = new SectionTypes[8]
+                {
+                    S, l, l, s, s, l, l ,F
+                };
+                Track a = new Track("Nederland", track1);
+                Competition.Tracks.Enqueue(a);
+            }
+            else 
             {
-                S, r, l, r, r, s, s, l, r, r, s, l, r, r, s, F
-            };
-
-            Track z = new Track("nederland", sectionsTrack1);
-            Track y = new Track("België", sectionsTrack2);
-
-            AddTrack(z);
-            AddTrack(y);
-        }
-
-        static public void AddParticipant(IParticipant participant)
-        {
-            Competition.Participants.Add(participant);
-        }
-
-        static public void AddTrack(Track track)
-        {
-            Competition.Tracks.Enqueue(track);
+                SectionTypes[] track2 = new SectionTypes[16]
+                {
+                    S, r, l, r, r, s, s, l, r, r, s, l, r, r, s, F
+                };
+                Track a = new Track("België", track2);
+                Competition.Tracks.Enqueue(a);
+            }
         }
 
         static public void NextRace() 
