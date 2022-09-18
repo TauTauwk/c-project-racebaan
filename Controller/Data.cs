@@ -13,6 +13,7 @@ namespace Controller
         static private Race currentRace;
         static public Competition Competition { get; set; }
         static public Race CurrentRace { get; set; }
+
         static private int num =  0;
         static private int trackNum = 0;
 
@@ -47,7 +48,7 @@ namespace Controller
         static public void AddTrack()
         {
             trackNum++;
-            trackNum = (trackNum % 2);
+            trackNum = trackNum % 2;
 
             var l = SectionTypes.LeftCorner;
             var r = SectionTypes.RightCorner;
