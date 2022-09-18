@@ -12,15 +12,15 @@ namespace Model
         public List<IParticipant> Participants { get; set; }
         public Queue<Track> Tracks { get; set; }
 
-        public Track NextTrack() 
+        public Track NextTrack()
         {
-            if (Tracks.Count != 0)
-            {
-                return Tracks.Dequeue();                
-            }
-            else 
+            if (Tracks == null || Tracks.Count == 0)
             {
                 return null;
+            }
+            else
+            {
+                return Tracks.Dequeue();
             }
         }
     }
