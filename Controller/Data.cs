@@ -50,17 +50,32 @@ namespace Controller
             trackNum++;
             trackNum = trackNum % 2;
 
-            var l = SectionTypes.LeftCorner;
-            var r = SectionTypes.RightCorner;
-            var S = SectionTypes.StartGrid;
-            var s = SectionTypes.Straight;
-            var F = SectionTypes.Finish;
+            var ln = SectionTypes.LeftN;
+            var le = SectionTypes.LeftE;
+            var ls = SectionTypes.LeftS;
+            var lw = SectionTypes.LeftW;
+            var rn = SectionTypes.RightN;
+            var re = SectionTypes.RightE;
+            var rs = SectionTypes.RightS;
+            var rw = SectionTypes.RightW;
+            var Sn = SectionTypes.StartN;
+            var Se = SectionTypes.StartE;
+            var Ss = SectionTypes.StartS;
+            var Sw = SectionTypes.StartW;
+            var sn = SectionTypes.StraightN;
+            var se = SectionTypes.StraightE;
+            var ss = SectionTypes.StraightS;
+            var sw = SectionTypes.StraightW;
+            var Fn = SectionTypes.FinishN;
+            var Fe = SectionTypes.FinishE;
+            var Fs = SectionTypes.FinishS;
+            var Fw = SectionTypes.FinishW;
 
-            if (trackNum == 1)
+            if (trackNum == 0)
             {
                 SectionTypes[] track1 = new SectionTypes[8]
                 {
-                    S, l, l, s, s, l, l ,F
+                    Se, ln, lw, sw, sw, ls, le ,Fe
                 };
                 Track a = new Track("Nederland", track1);
                 Competition.Tracks.Enqueue(a);
@@ -69,7 +84,7 @@ namespace Controller
             {
                 SectionTypes[] track2 = new SectionTypes[16]
                 {
-                    S, r, l, r, r, s, s, l, r, r, s, l, r, r, s, F
+                    Se, rs, le, rs, rw, sw, sw, ls, rw, rn, sn, lw, rn, re, se, Fe
                 };
                 Track a = new Track("België", track2);
                 Competition.Tracks.Enqueue(a);

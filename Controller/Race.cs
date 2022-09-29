@@ -14,7 +14,7 @@ namespace Controller
         public DateTime StartTime { get; set; }
 
         private Random _random = new Random(DateTime.Now.Millisecond);
-        private Dictionary<Section, SectionData> _positions;
+        private Dictionary<Section, SectionData> _positions = new Dictionary<Section, SectionData>();
 
         public SectionData GetSectionData(Section section) 
         {            
@@ -38,6 +38,18 @@ namespace Controller
                 participant.Equipment.Quality = _random.Next(100);
                 participant.Equipment.Performance = _random.Next(100);
             }
+        }
+
+        public void GiveStartPositions(Track track, List<IParticipant> participants)
+        {
+            int nummer = 0;
+            foreach (var participant in participants)
+            {
+                nummer++;
+                
+            }
+            Console.WriteLine();
+            GetSectionData(track.Sections.First()).Left = participants[0];
         }
     }
 }

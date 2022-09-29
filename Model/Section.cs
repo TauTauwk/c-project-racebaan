@@ -18,11 +18,25 @@ namespace Model
 
     public enum SectionTypes
     { 
-        Straight,
-        LeftCorner,
-        RightCorner,
-        StartGrid,
-        Finish
+        StraightN,
+        StraightE,
+        StraightS,
+        StraightW,
+        LeftN,
+        LeftE,
+        LeftS,
+        LeftW,
+        RightN,
+        RightE,
+        RightS,
+        RightW,
+        StartN,
+        StartE,
+        StartS,
+        StartW,
+        FinishN,
+        FinishE,
+        FinishS,
+        FinishW
     }
-
 }

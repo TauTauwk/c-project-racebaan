@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Collections.Specialized.BitVector32;
 
 namespace Zandvoort_xD
 {
@@ -16,133 +17,504 @@ namespace Zandvoort_xD
         }
 
         #region graphics
-        private static string[] _finishHorizontal =
+        #region finish
+        private static string[] _finishN =
         {
-            "F----",
-            "F  # ",
-            "F    ",
-            "F  # ",
-            "F----"
+            "|L R|",
+            "FFFFF"
         };
 
-        private static string[] _StraightHorizontal =
+        private static string[] _finishE =
+        {
+            "F-",
+            "FL",
+            "F ",
+            "FR",
+            "F-"
+        };
+        private static string[] _finishS =
+        {
+            "FFFFF",
+            "|R L|"
+        };
+        private static string[] _finishW =
+        {
+            "----F",
+            "RF",
+            " F",
+            "LF",
+            "-F"
+        };
+        #endregion
+        #region Straight
+        private static string[] _StraightN =
+        {
+            "|   |",
+            "|L R|",
+            "|   |",
+            "|   |",
+            "|   |"
+        };
+        private static string[] _StraightE =
         {
             "-----",
-            "   # ",
+            "   L ",
             "     ",
-            "   # ",
+            "   R ",
             "-----"
         };
-
-        private static string[] _LeftHorizontal =
+        private static string[] _StraightS =
+        {
+            "|   |",
+            "|   |",
+            "|   |",
+            "|R L|",
+            "|   |"
+        };
+        private static string[] _StraightW =
+        {
+            "-----",
+            " R   ",
+            "     ",
+            " L   ",
+            "-----"
+        };
+        #endregion
+        #region Left
+        private static string[] _LeftN =
         {
             "/   |",
-            " # #|",
+            " L R|",
             "    /",
             "   / ",
             "--/  "
         };
-
-        private static string[] _RightHorizontal =
+        private static string[] _LeftE =
+        {
+            "|   \\",
+            "|  L ",
+            "\\    ",
+            " \\ R ",
+            "  \\--"
+        };
+        private static string[] _LeftS =
+        {
+            "  /--",
+            " /   ",
+            "/    ",
+            "|R L ",
+            "|   /"
+        };
+        private static string[] _LeftW =
+        {
+            "--\\  ",
+            " R \\",
+            "    \\",
+            " L  |",
+            "\\   |"
+        };
+        #endregion
+        #region Right
+        private static string[] _RightN =
+        {
+            "|   \\",
+            "|L R ",
+            "\\    ",
+            " \\   ",
+            "  \\--"
+        };
+        private static string[] _RightE =
+        {
+            "  /--",
+            " / L ",
+            "/    ",
+            "|  R ",
+            "|   /"
+        };
+        private static string[] _RightS =
         {
             "--\\  ",
             "   \\ ",
             "    \\",
-            " # #|",
+            " R L|",
             "\\   |"
         };
-
-        private static string[] _StartGrid =
+        private static string[] _RightW =
         {
-            "-----",
-            "  >#>",
-            "     ",
-            " > # ",
-            "-----"
+            "/   |",
+            " R  |",
+            "    /",
+            " L /",
+            "--/  "
         };
-
+        #endregion
+        #region start
+        private static string[] _StartN =
+        {
+            "|L  |",
+            "|  R|"
+        };
+        private static string[] _StartE =
+        {
+            "--",
+            " L",
+            "  ",
+            "R ",
+            "--"
+        };
+        private static string[] _StartS =
+        {
+            "|R  |",
+            "|  L|"
+        }; private static string[] _StartW =
+        {
+            "--",
+            " R",
+            "  ",
+            "L ",
+            "--"
+        };
+        #endregion
         #endregion
 
-        private static string[] mirrorHorizontal(string[] _section)
-        {
-            string[] result = new string[4];
-            result[0] = _section[4];
-            result[1] = _section[3];
-            result[2] = _section[2];
-            result[3] = _section[1];
-            result[4] = _section[0];
-            return result;
-        }
+        //private static string[] mirrorHorizontal(string[] _section)
+        //{
+        //    string[] result = new string[4];
+        //    result[0] = _section[4];
+        //    result[1] = _section[3];
+        //    result[2] = _section[2];
+        //    result[3] = _section[1];
+        //    result[4] = _section[0];
+        //    return result;
+        //}
 
-        private static string[] mirrorVertical(string[] _section)
-        {
-            int num = 0;
-            char[] [] ch = new char[4][];
-            foreach (string s in _section)
-            {
-                char[] sectionDetails = s.ToCharArray();
-                ch[num] = sectionDetails;
+        //private static string[] TurnClockwise(string[] _section)
+        //{
+        //    _section.Reverse();
+        //    char[] sectionDetails = new char[4];
+        //    char[] tussenResult = new char[4];
+        //    string[] result = new string[4];
+        //    for (int row = 0; row < 4; row++)
+        //    {
+        //        int num = 0;
+        //        foreach (string s in _section)
+        //        {
+        //            sectionDetails = s.ToCharArray();
+        //            tussenResult[row] = sectionDetails[num];
+        //            num++;
+        //        }
+        //        string charStr = new string(tussenResult);
+        //        result[num] = charStr;
+        //    }
+        //    return result;
+        //}
 
-                string charStr = new string(sectionDetails);
-                num++;
-            }
-        }
+        //static string[] RotateString(string[] matrix, int n)
+        //{
+        //    string[] start = matrix;
+        //    string[] result = new string[n];
+        //    char[][] sectionDetails = new char[n][];
+
+        //    for (int i = 0; i < n; i++)
+        //    {
+        //        foreach (string s in matrix)
+        //        {
+        //            sectionDetails[i] = s.ToCharArray();
+        //        }
+        //    }
+
+        //    char[][] ret = new char[n][];
+
+        //    for (int i = 0; i < n; ++i)
+        //    {
+        //        ret[i] = new char[n];
+
+        //        for (int j = 0; j < n; ++j)
+        //        {
+        //            ret[i][j] = sectionDetails[n - j - 1][i];
+        //        }
+        //    }
+
+        //    for (int i = 0; i < n; i++)
+        //    {
+        //        result[i] = new string(ret[i]);
+        //    }
+        //    return result;
+        //}
+
         public static void DrawTrack(Track track)
         {
             int x = 25;
             int y = 24;
-
+            int bochtL = 0;
+            int bochtR = 0;
             Console.SetWindowSize(49, 49);
             Console.SetCursorPosition(x,y);
 
             foreach (var section in track.Sections) 
             {
-                if (section.SectionType == SectionTypes.LeftCorner)
+                #region drawLeft
+                if (section.SectionType == SectionTypes.LeftN)
                 {
-                    foreach (string s in _LeftHorizontal)
+                    foreach (string s in _LeftN)
                     {
                         y++;
-                        Console.SetCursorPosition(x, y);
                         Console.WriteLine(s);
-                    }
-                }
-                if (section.SectionType == SectionTypes.RightCorner)
-                {
-                    foreach (string s in _RightHorizontal)
-                    {
-                        y++;
                         Console.SetCursorPosition(x, y);
-                        Console.WriteLine(s);
-                    }
-                }
-                if (section.SectionType == SectionTypes.StartGrid)
-                {
-                    foreach (string s in _StartGrid)
-                    {
-                        y++;
-                        Console.SetCursorPosition(x, y);
-                        Console.WriteLine(s);
-                    }
-                }
-                if (section.SectionType == SectionTypes.Straight)
-                {
-                    foreach (string s in _StraightHorizontal)
-                    {
-                        y++;
-                        Console.SetCursorPosition(x, y);
-                        Console.WriteLine(s);
-                    }
-                }
-                if (section.SectionType == SectionTypes.Finish)
-                {
-                    foreach (string s in _finishHorizontal)
-                    {
-                        y++;
-                        Console.SetCursorPosition(x, y);
-                        Console.WriteLine(s);
-                    }
-                }
 
+                    }
+                    y -= 10;
+                    Console.SetCursorPosition(x, y);
+                }
+                if (section.SectionType == SectionTypes.LeftE)
+                {
+                    foreach (string s in _LeftE)
+                    {
+                        y++;
+                        Console.WriteLine(s);
+                        Console.SetCursorPosition(x, y);
+                    }
+                    x += 5;
+                    y -= 5;
+                    Console.SetCursorPosition(x, y);
+                }
+                if (section.SectionType == SectionTypes.LeftS)
+                {
+                    foreach (string s in _LeftS)
+                    {
+                        y++;
+                        Console.WriteLine(s);
+                        Console.SetCursorPosition(x, y);
+                    }
+                    Console.SetCursorPosition(x, y);
+                }
+                if (section.SectionType == SectionTypes.LeftW)
+                {
+                    foreach (string s in _LeftW)
+                    {
+                        y++;
+                        Console.WriteLine(s);
+                        Console.SetCursorPosition(x, y);
+                    }
+                    x -= 5;
+                    y -= 5;
+                    Console.SetCursorPosition(x, y);
+                }
+                #endregion
+                #region foute boel
+                //string[] kindOfSection = new string[4];
+                //for (int i = 0; i < bochtL % 4; i++)
+                //{
+                //    kindOfSection = RotateString(_LeftHorizontal, 4);
+                //    if (bochtL % 4 == 0)
+                //    {
+
+                //    }
+                //    else if (bochtL % 4 == 1)
+                //    {
+
+                //    }
+                //    else if (bochtL % 4 == 2)
+                //    {
+
+                //    }
+                //}
+
+                //foreach (string s in kindOfSection)
+                //{
+                //    Console.SetCursorPosition(x, y);
+                //    Console.WriteLine(s);
+                //}
+                //bochtL++;
+                #endregion
+                #region drawRight
+                if (section.SectionType == SectionTypes.RightN)
+                {
+                    foreach (string s in _RightN)
+                    {
+                        y++;
+                        Console.WriteLine(s);
+                        Console.SetCursorPosition(x, y);
+                    }
+                    y -= 10;
+                    Console.SetCursorPosition(x, y);
+                }
+                if (section.SectionType == SectionTypes.RightE)
+                {
+                    foreach (string s in _RightE)
+                    {
+                        y++;
+                        Console.WriteLine(s);
+                        Console.SetCursorPosition(x, y);
+                    }
+                    x += 5;
+                    y -= 5;
+                    Console.SetCursorPosition(x, y);
+                }
+                if (section.SectionType == SectionTypes.RightS)
+                {
+                    foreach (string s in _RightS)
+                    {
+                        y++;
+                        Console.WriteLine(s);
+                        Console.SetCursorPosition(x, y);
+                    }
+                    Console.SetCursorPosition(x, y);
+                }
+                if (section.SectionType == SectionTypes.RightW)
+                {
+                    foreach (string s in _RightW)
+                    {
+                        y++;
+                        Console.WriteLine(s);
+                        Console.SetCursorPosition(x, y);
+                    }
+                    x -= 5;
+                    y -= 5;
+                    Console.SetCursorPosition(x, y);
+                }
+                #endregion
+                #region drawStart
+                if (section.SectionType == SectionTypes.StartN)
+                {
+                    foreach (string s in _StartN)
+                    {
+                        y++;
+                        Console.WriteLine(s);
+                        Console.SetCursorPosition(x, y);
+                    }
+                    y -= 10;
+                    Console.SetCursorPosition(x, y);
+                }
+                if (section.SectionType == SectionTypes.StartE)
+                {
+                    foreach (string s in _StartE)
+                    {
+                        y++;
+                        Console.WriteLine(s);
+                        Console.SetCursorPosition(x, y);
+                    }
+                    x += 5;
+                    y -= 5;
+                    Console.SetCursorPosition(x, y);
+                }
+                if (section.SectionType == SectionTypes.StartS)
+                {
+                    foreach (string s in _StartS)
+                    {
+                        y++;
+                        Console.WriteLine(s);
+                        Console.SetCursorPosition(x, y);
+                    }
+                    Console.SetCursorPosition(x, y);
+                }
+                if (section.SectionType == SectionTypes.StartW)
+                {
+                    foreach (string s in _StartW)
+                    {
+                        y++;
+                        Console.WriteLine(s);
+                        Console.SetCursorPosition(x, y);
+                    }
+                    x -= 5;
+                    y -= 5;
+                    Console.SetCursorPosition(x, y);
+                }
+                #endregion
+                #region drawStraight
+                if (section.SectionType == SectionTypes.StraightN)
+                {
+                    foreach (string s in _StraightN)
+                    {
+                        y++;
+                        Console.WriteLine(s);
+                        Console.SetCursorPosition(x, y);
+                    }
+                    y -= 10;
+                    Console.SetCursorPosition(x, y);
+                }
+                if (section.SectionType == SectionTypes.StraightE)
+                {
+                    foreach (string s in _StraightE)
+                    {
+                        y++;
+                        Console.WriteLine(s);
+                        Console.SetCursorPosition(x, y);
+                    }
+                    x += 5;
+                    y -= 5;
+                    Console.SetCursorPosition(x, y);
+                }
+                if (section.SectionType == SectionTypes.StraightS)
+                {
+                    foreach (string s in _StraightS)
+                    {
+                        y++;
+                        Console.WriteLine(s);
+                        Console.SetCursorPosition(x, y);
+                    }
+                    Console.SetCursorPosition(x, y);
+                }
+                if (section.SectionType == SectionTypes.StraightW)
+                {
+                    foreach (string s in _StraightW)
+                    {
+                        y++;
+                        Console.WriteLine(s);
+                        Console.SetCursorPosition(x, y);
+                    }
+                    x -= 5;
+                    y -= 5;
+                    Console.SetCursorPosition(x, y);
+                }
+                #endregion
+                #region drawFinish
+                if (section.SectionType == SectionTypes.FinishN)
+                {
+                    foreach (string s in _finishN)
+                    {
+                        y++;
+                        Console.WriteLine(s);
+                        Console.SetCursorPosition(x, y);
+                    }
+                    y -= 10;
+                    Console.SetCursorPosition(x, y);
+                }
+                if (section.SectionType == SectionTypes.FinishE)
+                {
+                    foreach (string s in _finishE)
+                    {
+                        y++;
+                        Console.WriteLine(s);
+                        Console.SetCursorPosition(x, y);
+                    }
+                    x += 5;
+                    y -= 5;
+                    Console.SetCursorPosition(x, y);
+                }
+                if (section.SectionType == SectionTypes.FinishS)
+                {
+                    foreach (string s in _finishS)
+                    {
+                        y++;
+                        Console.WriteLine(s);
+                        Console.SetCursorPosition(x, y);
+                    }
+                    Console.SetCursorPosition(x, y);
+                }
+                if (section.SectionType == SectionTypes.FinishW)
+                {
+                    foreach (string s in _finishW)
+                    {
+                        y++;
+                        Console.WriteLine(s);
+                        Console.SetCursorPosition(x, y);
+                    }
+                    x -= 5;
+                    y -= 5;
+                    Console.SetCursorPosition(x, y);
+                }
+                #endregion
             }
         }
     }

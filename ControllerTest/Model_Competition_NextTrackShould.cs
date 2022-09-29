@@ -31,16 +31,18 @@ namespace ControllerTest
         {
             Competition _competition = new Competition();
 
-            var l = SectionTypes.LeftCorner;
-            var r = SectionTypes.RightCorner;
-            var S = SectionTypes.StartGrid;
-            var s = SectionTypes.Straight;
-            var F = SectionTypes.Finish;
+            var ln = SectionTypes.LeftN;
+            var le = SectionTypes.LeftE;
+            var ls = SectionTypes.LeftS;
+            var lw = SectionTypes.LeftW;
+            var Se = SectionTypes.StartE;
+            var sw = SectionTypes.StraightW;
+            var Fe = SectionTypes.FinishE;
 
             SectionTypes[] track1 = new SectionTypes[8]
-                {
-                    S, l, l, s, s, l, l ,F
-                };
+            {
+                Se, ln, lw, sw, sw, ls, le ,Fe
+            };
 
             Track aTrack = new Track("Nederland", track1);
 
@@ -56,15 +58,17 @@ namespace ControllerTest
         {
             Competition _competition = new Competition();
 
-            var l = SectionTypes.LeftCorner;
-            var r = SectionTypes.RightCorner;
-            var S = SectionTypes.StartGrid;
-            var s = SectionTypes.Straight;
-            var F = SectionTypes.Finish;
+            var ln = SectionTypes.LeftN;
+            var le = SectionTypes.LeftE;
+            var ls = SectionTypes.LeftS;
+            var lw = SectionTypes.LeftW;
+            var Se = SectionTypes.StartE;
+            var sw = SectionTypes.StraightW;
+            var Fe = SectionTypes.FinishE;
 
             SectionTypes[] track1 = new SectionTypes[8]
             {
-                S, l, l, s, s, l, l ,F
+                Se, ln, lw, sw, sw, ls, le ,Fe
             };
 
             Track aTrack = new Track("Nederland", track1);
@@ -82,15 +86,17 @@ namespace ControllerTest
         {
             Competition _competition = new Competition();
 
-            var l = SectionTypes.LeftCorner;
-            var r = SectionTypes.RightCorner;
-            var S = SectionTypes.StartGrid;
-            var s = SectionTypes.Straight;
-            var F = SectionTypes.Finish;
+            var ln = SectionTypes.LeftN;
+            var le = SectionTypes.LeftE;
+            var ls = SectionTypes.LeftS;
+            var lw = SectionTypes.LeftW;
+            var Se = SectionTypes.StartE;
+            var sw = SectionTypes.StraightW;
+            var Fe = SectionTypes.FinishE;
 
             SectionTypes[] track1 = new SectionTypes[8]
             {
-                S, l, l, s, s, l, l ,F
+                Se, ln, lw, sw, sw, ls, le ,Fe
             };
             var track2 = track1;
 
