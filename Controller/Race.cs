@@ -10,25 +10,30 @@ namespace Controller
     public class Race
     {
         public Track Track { get; set; }
-        public List<IParticipant> Participants { get; set; }
+        public List<IParticipant> Participants { get; set; } = new List<IParticipant> { };
         public DateTime StartTime { get; set; }
 
         private Random _random = new Random(DateTime.Now.Millisecond);
         private Dictionary<Section, SectionData> _positions = new Dictionary<Section, SectionData>();
 
-        public SectionData GetSectionData(Section section) 
-        {            
-            if (!(_positions.ContainsKey(section)))
-            {
-                _positions[section] = new SectionData();
-            }
-            return _positions[section];
-        }
-
         public Race(Track track, List<IParticipant> participants)
         {
             Track = track;
             Participants = participants;
+            GiveStartPositions(track, participants);
+        }
+
+        public SectionData GetSectionData(Section section) 
+        {
+            if (!_positions.ContainsKey(section))
+            {
+                _positions.Add(section, new SectionData());
+            }
+            else
+            {
+                _positions[section] = new SectionData();
+            }
+            return _positions[section];
         }
 
         public void RandomizeEquipment() 
@@ -43,13 +48,26 @@ namespace Controller
         public void GiveStartPositions(Track track, List<IParticipant> participants)
         {
             int nummer = 0;
-            foreach (var participant in participants)
-            {
-                nummer++;
-                
+            foreach (Section s in track.Sections) {
+                if (s.SectionType.ToString() == "StartE")
+                {
+                    if (nummer % 2 == 0)
+                    {
+                        GetSectionData(s).Left = participants[nummer];
+                        nummer++;
+                    }
+                    else
+                    {
+                        GetSectionData(s).Right = participants[nummer];
+                        nummer++;
+                    }
+                    Console.WriteLine(GetSectionData(s).Left.Name);
+                }
             }
-            Console.WriteLine();
-            GetSectionData(track.Sections.First()).Left = participants[0];
+            foreach (var iets in _positions)
+            {
+                Console.WriteLine(iets);
+            }
         }
     }
 }

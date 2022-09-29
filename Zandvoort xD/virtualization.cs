@@ -18,12 +18,6 @@ namespace Zandvoort_xD
 
         #region graphics
         #region finish
-        private static string[] _finishN =
-        {
-            "|L R|",
-            "FFFFF"
-        };
-
         private static string[] _finishE =
         {
             "F-",
@@ -31,19 +25,6 @@ namespace Zandvoort_xD
             "F ",
             "FR",
             "F-"
-        };
-        private static string[] _finishS =
-        {
-            "FFFFF",
-            "|R L|"
-        };
-        private static string[] _finishW =
-        {
-            "----F",
-            "RF",
-            " F",
-            "LF",
-            "-F"
         };
         #endregion
         #region Straight
@@ -149,29 +130,12 @@ namespace Zandvoort_xD
         };
         #endregion
         #region start
-        private static string[] _StartN =
-        {
-            "|L  |",
-            "|  R|"
-        };
         private static string[] _StartE =
         {
             "--",
             " L",
             "  ",
             "R ",
-            "--"
-        };
-        private static string[] _StartS =
-        {
-            "|R  |",
-            "|  L|"
-        }; private static string[] _StartW =
-        {
-            "--",
-            " R",
-            "  ",
-            "L ",
             "--"
         };
         #endregion
@@ -375,17 +339,6 @@ namespace Zandvoort_xD
                 }
                 #endregion
                 #region drawStart
-                if (section.SectionType == SectionTypes.StartN)
-                {
-                    foreach (string s in _StartN)
-                    {
-                        y++;
-                        Console.WriteLine(s);
-                        Console.SetCursorPosition(x, y);
-                    }
-                    y -= 10;
-                    Console.SetCursorPosition(x, y);
-                }
                 if (section.SectionType == SectionTypes.StartE)
                 {
                     foreach (string s in _StartE)
@@ -394,29 +347,7 @@ namespace Zandvoort_xD
                         Console.WriteLine(s);
                         Console.SetCursorPosition(x, y);
                     }
-                    x += 5;
-                    y -= 5;
-                    Console.SetCursorPosition(x, y);
-                }
-                if (section.SectionType == SectionTypes.StartS)
-                {
-                    foreach (string s in _StartS)
-                    {
-                        y++;
-                        Console.WriteLine(s);
-                        Console.SetCursorPosition(x, y);
-                    }
-                    Console.SetCursorPosition(x, y);
-                }
-                if (section.SectionType == SectionTypes.StartW)
-                {
-                    foreach (string s in _StartW)
-                    {
-                        y++;
-                        Console.WriteLine(s);
-                        Console.SetCursorPosition(x, y);
-                    }
-                    x -= 5;
+                    x += 2;
                     y -= 5;
                     Console.SetCursorPosition(x, y);
                 }
@@ -469,17 +400,6 @@ namespace Zandvoort_xD
                 }
                 #endregion
                 #region drawFinish
-                if (section.SectionType == SectionTypes.FinishN)
-                {
-                    foreach (string s in _finishN)
-                    {
-                        y++;
-                        Console.WriteLine(s);
-                        Console.SetCursorPosition(x, y);
-                    }
-                    y -= 10;
-                    Console.SetCursorPosition(x, y);
-                }
                 if (section.SectionType == SectionTypes.FinishE)
                 {
                     foreach (string s in _finishE)
@@ -488,29 +408,7 @@ namespace Zandvoort_xD
                         Console.WriteLine(s);
                         Console.SetCursorPosition(x, y);
                     }
-                    x += 5;
-                    y -= 5;
-                    Console.SetCursorPosition(x, y);
-                }
-                if (section.SectionType == SectionTypes.FinishS)
-                {
-                    foreach (string s in _finishS)
-                    {
-                        y++;
-                        Console.WriteLine(s);
-                        Console.SetCursorPosition(x, y);
-                    }
-                    Console.SetCursorPosition(x, y);
-                }
-                if (section.SectionType == SectionTypes.FinishW)
-                {
-                    foreach (string s in _finishW)
-                    {
-                        y++;
-                        Console.WriteLine(s);
-                        Console.SetCursorPosition(x, y);
-                    }
-                    x -= 5;
+                    x += 2;
                     y -= 5;
                     Console.SetCursorPosition(x, y);
                 }

@@ -73,18 +73,18 @@ namespace Controller
 
             if (trackNum == 0)
             {
-                SectionTypes[] track1 = new SectionTypes[8]
+                SectionTypes[] track1 = new SectionTypes[]
                 {
-                    Se, ln, lw, sw, sw, ls, le ,Fe
+                    Se, Se, Se, Se, ln, lw, sw, sw, ls, le ,Fe
                 };
                 Track a = new Track("Nederland", track1);
                 Competition.Tracks.Enqueue(a);
             }
             else 
             {
-                SectionTypes[] track2 = new SectionTypes[16]
+                SectionTypes[] track2 = new SectionTypes[]
                 {
-                    Se, rs, le, rs, rw, sw, sw, ls, rw, rn, sn, lw, rn, re, se, Fe
+                    Se, Se, Se, Se, rs, le, rs, rw, sw, sw, ls, rw, rn, sn, lw, rn, re, se, Fe
                 };
                 Track a = new Track("België", track2);
                 Competition.Tracks.Enqueue(a);
