@@ -48,26 +48,31 @@ namespace Controller
         public void GiveStartPositions(Track track, List<IParticipant> participants)
         {
             int nummer = 0;
-            foreach (Section s in track.Sections) {
-                if (s.SectionType.ToString() == "StartE")
+            foreach (Section s in track.Sections)
+            {
+                var SDL = GetSectionData(s).Left;
+                var SDR = GetSectionData(s).Right;
+                var deelnemer = participants[nummer];
+
+                if (s.SectionType.ToString() == "StartE" && participants.Count < 8)
                 {
-                    if (nummer % 2 == 0)
+                    if (nummer % 2 == 1)
                     {
-                        GetSectionData(s).Left = participants[nummer];
+                        SDL = participants[nummer];
                         nummer++;
                     }
-                    else
+                    else if (nummer % 2 == 0)
                     {
-                        GetSectionData(s).Right = participants[nummer];
+                        SDR = participants[nummer];
                         nummer++;
                     }
-                    Console.WriteLine(GetSectionData(s).Left.Name);
+                }
+                else if (!(participants.Count <= 8))
+                {
+                    Console.WriteLine("Er zijn te veel deelnemers");
                 }
             }
-            foreach (var iets in _positions)
-            {
-                Console.WriteLine(iets);
-            }
         }
+
     }
 }

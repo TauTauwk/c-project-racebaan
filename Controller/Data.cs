@@ -58,18 +58,12 @@ namespace Controller
             var re = SectionTypes.RightE;
             var rs = SectionTypes.RightS;
             var rw = SectionTypes.RightW;
-            var Sn = SectionTypes.StartN;
             var Se = SectionTypes.StartE;
-            var Ss = SectionTypes.StartS;
-            var Sw = SectionTypes.StartW;
             var sn = SectionTypes.StraightN;
             var se = SectionTypes.StraightE;
             var ss = SectionTypes.StraightS;
             var sw = SectionTypes.StraightW;
-            var Fn = SectionTypes.FinishN;
             var Fe = SectionTypes.FinishE;
-            var Fs = SectionTypes.FinishS;
-            var Fw = SectionTypes.FinishW;
 
             if (trackNum == 0)
             {

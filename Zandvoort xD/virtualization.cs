@@ -5,7 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static System.Collections.Specialized.BitVector32;
+using Controller;
 
 namespace Zandvoort_xD
 {
@@ -13,7 +13,7 @@ namespace Zandvoort_xD
     {
         public static void Initialize()
         {
-
+            
         }
 
         #region graphics
@@ -210,9 +210,8 @@ namespace Zandvoort_xD
         {
             int x = 25;
             int y = 24;
-            int bochtL = 0;
-            int bochtR = 0;
-            Console.SetWindowSize(49, 49);
+            int nummer = 0;
+            Console.SetWindowSize(49, 21);
             Console.SetCursorPosition(x,y);
 
             foreach (var section in track.Sections) 
@@ -343,8 +342,18 @@ namespace Zandvoort_xD
                 {
                     foreach (string s in _StartE)
                     {
+                        string str = s;
                         y++;
-                        Console.WriteLine(s);
+                        if ((s.Contains("R") || s.Contains("L")) && nummer < Data.CurrentRace.Participants.Count())
+                        {
+                            IParticipant Left;
+                            IParticipant Right;
+                            Left = Data.CurrentRace.Participants[nummer];
+                            Right = Data.CurrentRace.Participants[nummer];
+                            nummer++;
+                            str = DrawPlayers(s, Left, Right);
+                        }
+                        Console.WriteLine(str);
                         Console.SetCursorPosition(x, y);
                     }
                     x += 2;
@@ -413,7 +422,22 @@ namespace Zandvoort_xD
                     Console.SetCursorPosition(x, y);
                 }
                 #endregion
+                
             }
+        }
+
+        public static string DrawPlayers(string str, IParticipant LeftPlayer, IParticipant RightPlayer)
+        {
+            int x = 25;
+            int y = 24;
+
+            char LeftDriverNumber = LeftPlayer.Name[LeftPlayer.Name.Length - 1];
+            char RightDriverNumber = RightPlayer.Name[RightPlayer.Name.Length - 1];
+
+            str = str.Replace("L", LeftDriverNumber.ToString());
+            str = str.Replace("R ", RightDriverNumber.ToString() + " ");
+            return str;
+
         }
     }
 }

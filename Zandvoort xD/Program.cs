@@ -2,6 +2,7 @@
 using Model;
 using System;
 using static Controller.Data;
+using static Zandvoort_xD.Virtualization;
 
 namespace Zandvoort_xD // Note: actual namespace depends on the project name.
 {
@@ -9,8 +10,8 @@ namespace Zandvoort_xD // Note: actual namespace depends on the project name.
     {
         static void Main(string[] args)
         {
-            Initialize();
-            NextRace();
+            Data.Initialize();
+            Data.NextRace();
             #region trackNameTest
             //Console.WriteLine("Track: " + CurrentRace.Track.Name + "\n");
             //CurrentRace.RandomizeEquipment();
@@ -25,6 +26,8 @@ namespace Zandvoort_xD // Note: actual namespace depends on the project name.
             //                    + Participant.Equipment.IsBroken);
             //}
             #endregion
+            Virtualization.DrawTrack(CurrentRace.Track);
+            Data.CurrentRace.GiveStartPositions(CurrentRace.Track, CurrentRace.Participants);
             Virtualization.DrawTrack(CurrentRace.Track);
 
             for (; ; )

@@ -30,13 +30,7 @@ namespace Model
         RightE,
         RightS,
         RightW,
-        StartN,
         StartE,
-        StartS,
-        StartW,
-        FinishN,
         FinishE,
-        FinishS,
-        FinishW
     }
 }
