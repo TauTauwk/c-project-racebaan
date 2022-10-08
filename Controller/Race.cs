@@ -3,15 +3,20 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Timers;
+using static Model.DriverChangedEventsArgs;
 
 namespace Controller
 {
     public class Race
     {
         public Track Track { get; set; }
-        public List<IParticipant> Participants { get; set; } = new List<IParticipant> { };
         public DateTime StartTime { get; set; }
+
+        public List<IParticipant> Participants { get; set; } = new List<IParticipant> { };
+        public event DriverChanged driverChanged;
+
+        private System.Timers.Timer timer;
 
         private Random _random = new Random(DateTime.Now.Millisecond);
         private Dictionary<Section, SectionData> _positions = new Dictionary<Section, SectionData>();
@@ -21,9 +26,16 @@ namespace Controller
             Track = track;
             Participants = participants;
             GiveStartPositions(track, participants);
+            timer = new System.Timers.Timer(500);
+            timer.Elapsed += OnTimedEvent;
         }
 
-        public SectionData GetSectionData(Section section) 
+        private void OnTimedEvent(object? sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        public SectionData GetSectionData(Section section)
         {
             if (!_positions.ContainsKey(section))
             {
@@ -36,12 +48,12 @@ namespace Controller
             return _positions[section];
         }
 
-        public void RandomizeEquipment() 
+        public void RandomizeEquipment()
         {
-            foreach (var participant in Participants) 
+            foreach (var participant in Participants)
             {
-                participant.Equipment.Quality = _random.Next(100);
-                participant.Equipment.Performance = _random.Next(100);
+                participant.Equipment.Quality = _random.Next(10);
+                participant.Equipment.Performance = _random.Next(5);
             }
         }
 
@@ -74,5 +86,29 @@ namespace Controller
             }
         }
 
+        public void start()
+        {
+            timer.Start();
+        }
+
+        public void ChangeDriverPosition()
+        {
+            LinkedList<Section> Sections = Track.Sections;
+
+            foreach (Section s in Sections)
+            {
+                SectionData sd = GetSectionData(s);
+            }
+            for (int i = 0; i < Sections.Count; i++)
+            {
+                Sections[i];
+                
+                if (Se.Left == null)
+                {
+
+                }
+            }
+            DriverChanged driverChanged;
+        }
     }
 }

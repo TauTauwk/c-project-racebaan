@@ -16,6 +16,10 @@ namespace Zandvoort_xD
             
         }
 
+        public static void DriverChanged(object? sender, DriverChangedEventsArgs e)
+        {
+            DrawTrack(e.Track);
+        }
         #region graphics
         #region finish
         private static string[] _finishE =
@@ -224,7 +228,6 @@ namespace Zandvoort_xD
                         y++;
                         Console.WriteLine(s);
                         Console.SetCursorPosition(x, y);
-
                     }
                     y -= 10;
                     Console.SetCursorPosition(x, y);
@@ -422,22 +425,17 @@ namespace Zandvoort_xD
                     Console.SetCursorPosition(x, y);
                 }
                 #endregion
-                
             }
         }
 
         public static string DrawPlayers(string str, IParticipant LeftPlayer, IParticipant RightPlayer)
         {
-            int x = 25;
-            int y = 24;
-
             char LeftDriverNumber = LeftPlayer.Name[LeftPlayer.Name.Length - 1];
             char RightDriverNumber = RightPlayer.Name[RightPlayer.Name.Length - 1];
 
             str = str.Replace("L", LeftDriverNumber.ToString());
             str = str.Replace("R ", RightDriverNumber.ToString() + " ");
             return str;
-
         }
     }
 }

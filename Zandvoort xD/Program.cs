@@ -29,6 +29,7 @@ namespace Zandvoort_xD // Note: actual namespace depends on the project name.
             Virtualization.DrawTrack(CurrentRace.Track);
             Data.CurrentRace.GiveStartPositions(CurrentRace.Track, CurrentRace.Participants);
             Virtualization.DrawTrack(CurrentRace.Track);
+            CurrentRace.driverChanged += Virtualization.DriverChanged;
 
             for (; ; )
             {
