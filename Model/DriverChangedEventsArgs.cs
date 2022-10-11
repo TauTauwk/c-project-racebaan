@@ -8,7 +8,7 @@ namespace Model
 {
     public class DriverChangedEventsArgs : EventArgs
     {
-        public Track Track { get; set; }
+        public Track? Track { get; set; }
 
         public delegate void DriverChanged(object? sender, DriverChangedEventsArgs e);
     }

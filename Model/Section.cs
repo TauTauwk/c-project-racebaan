@@ -8,9 +8,9 @@ namespace Model
 {
     public class Section
     {
-        public SectionTypes SectionType { get; set; }
+        public SectionTypes? SectionType { get; set; }
 
-        public Section(SectionTypes sectionType)
+        public Section(SectionTypes? sectionType)
         {
             SectionType = sectionType;
         }

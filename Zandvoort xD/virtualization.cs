@@ -347,7 +347,7 @@ namespace Zandvoort_xD
                     {
                         string str = s;
                         y++;
-                        if ((s.Contains("R") || s.Contains("L")) && nummer < Data.CurrentRace.Participants.Count())
+                        if ((s.Contains("R") || s.Contains("L")) && nummer < Data.CurrentRace?.Participants?.Count())
                         {
                             IParticipant Left;
                             IParticipant Right;
