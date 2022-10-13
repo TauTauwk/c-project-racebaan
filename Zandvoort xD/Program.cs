@@ -26,10 +26,8 @@ namespace Zandvoort_xD // Note: actual namespace depends on the project name.
             //                    + Participant.Equipment.IsBroken);
             //}
             #endregion
-            Virtualization.DrawTrack(CurrentRace.Track);
-            Data.CurrentRace.GiveStartPositions(CurrentRace.Track, CurrentRace.Participants);
-            Virtualization.DrawTrack(CurrentRace.Track);
-            CurrentRace.driverChanged += Virtualization.DriverChanged;
+            Virtualization.Initialize(CurrentRace);
+            CurrentRace.start();
 
             for (; ; )
             {

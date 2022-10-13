@@ -11,14 +11,16 @@ namespace Zandvoort_xD
 {
     public static class Virtualization
     {
-        public static void Initialize()
+        private static SectionData SecD;
+        public static void Initialize(Race race)
         {
-            
+            Console.Clear();
+            race.driverChanged += DriverChanged;
         }
 
-        public static void DriverChanged(object? sender, DriverChangedEventsArgs e)
+        public static void DriverChanged(Object? sender, DriverChangedEventsArgs e)
         {
-            DrawTrack(e.Track);
+            DrawTrack(Data.CurrentRace);
         }
         #region graphics
         #region finish
@@ -210,7 +212,7 @@ namespace Zandvoort_xD
         //    return result;
         //}
 
-        public static void DrawTrack(Track track)
+        public static void DrawTrack(Race race)
         {
             int x = 25;
             int y = 24;
@@ -218,15 +220,17 @@ namespace Zandvoort_xD
             Console.SetWindowSize(49, 21);
             Console.SetCursorPosition(x,y);
 
-            foreach (var section in track.Sections) 
+            foreach (Section section in race.Track.Sections) 
             {
+                //Console.WriteLine(race.GetSectionData(section).Left);
+
                 #region drawLeft
                 if (section.SectionType == SectionTypes.LeftN)
                 {
                     foreach (string s in _LeftN)
                     {
                         y++;
-                        Console.WriteLine(s);
+                        drawString(s, section);
                         Console.SetCursorPosition(x, y);
                     }
                     y -= 10;
@@ -237,7 +241,7 @@ namespace Zandvoort_xD
                     foreach (string s in _LeftE)
                     {
                         y++;
-                        Console.WriteLine(s);
+                        drawString(s, section);
                         Console.SetCursorPosition(x, y);
                     }
                     x += 5;
@@ -249,7 +253,7 @@ namespace Zandvoort_xD
                     foreach (string s in _LeftS)
                     {
                         y++;
-                        Console.WriteLine(s);
+                        drawString(s, section);
                         Console.SetCursorPosition(x, y);
                     }
                     Console.SetCursorPosition(x, y);
@@ -259,7 +263,7 @@ namespace Zandvoort_xD
                     foreach (string s in _LeftW)
                     {
                         y++;
-                        Console.WriteLine(s);
+                        drawString(s, section);
                         Console.SetCursorPosition(x, y);
                     }
                     x -= 5;
@@ -299,7 +303,7 @@ namespace Zandvoort_xD
                     foreach (string s in _RightN)
                     {
                         y++;
-                        Console.WriteLine(s);
+                        drawString(s, section);
                         Console.SetCursorPosition(x, y);
                     }
                     y -= 10;
@@ -310,7 +314,7 @@ namespace Zandvoort_xD
                     foreach (string s in _RightE)
                     {
                         y++;
-                        Console.WriteLine(s);
+                        drawString(s, section);
                         Console.SetCursorPosition(x, y);
                     }
                     x += 5;
@@ -322,7 +326,7 @@ namespace Zandvoort_xD
                     foreach (string s in _RightS)
                     {
                         y++;
-                        Console.WriteLine(s);
+                        drawString(s, section);
                         Console.SetCursorPosition(x, y);
                     }
                     Console.SetCursorPosition(x, y);
@@ -332,7 +336,7 @@ namespace Zandvoort_xD
                     foreach (string s in _RightW)
                     {
                         y++;
-                        Console.WriteLine(s);
+                        drawString(s, section);
                         Console.SetCursorPosition(x, y);
                     }
                     x -= 5;
@@ -345,19 +349,31 @@ namespace Zandvoort_xD
                 {
                     foreach (string s in _StartE)
                     {
-                        string str = s;
+                        //string str = s;
+                        //y++;
+                        //if ((s.Contains("R") || s.Contains("L")) && nummer < Data.CurrentRace?.Participants?.Count())
+                        //{
+                        //    IParticipant Left;
+                        //    IParticipant Right;
+
+                        //    SecD = race.GetSectionData(section);
+                        //    SecD.Left = race.Participants[nummer];
+                        //    SecD.Right = race.Participants[nummer++];
+
+                        //    Left = SecD.Left;
+                        //    Right = SecD.Right;
+
+                        //    //Left = Data.CurrentRace.Participants[nummer];
+                        //    //Right = Data.CurrentRace.Participants[nummer];
+                        //    str = DrawPlayers(s, Left, Right);
+                        //}
+                        //Console.WriteLine(str);
+                        //Console.SetCursorPosition(x, y);
                         y++;
-                        if ((s.Contains("R") || s.Contains("L")) && nummer < Data.CurrentRace?.Participants?.Count())
-                        {
-                            IParticipant Left;
-                            IParticipant Right;
-                            Left = Data.CurrentRace.Participants[nummer];
-                            Right = Data.CurrentRace.Participants[nummer];
-                            nummer++;
-                            str = DrawPlayers(s, Left, Right);
-                        }
-                        Console.WriteLine(str);
+                        drawString(s, section);
                         Console.SetCursorPosition(x, y);
+
+                        
                     }
                     x += 2;
                     y -= 5;
@@ -370,7 +386,7 @@ namespace Zandvoort_xD
                     foreach (string s in _StraightN)
                     {
                         y++;
-                        Console.WriteLine(s);
+                        drawString(s, section);
                         Console.SetCursorPosition(x, y);
                     }
                     y -= 10;
@@ -381,7 +397,7 @@ namespace Zandvoort_xD
                     foreach (string s in _StraightE)
                     {
                         y++;
-                        Console.WriteLine(s);
+                        drawString(s, section);
                         Console.SetCursorPosition(x, y);
                     }
                     x += 5;
@@ -393,7 +409,7 @@ namespace Zandvoort_xD
                     foreach (string s in _StraightS)
                     {
                         y++;
-                        Console.WriteLine(s);
+                        drawString(s, section);
                         Console.SetCursorPosition(x, y);
                     }
                     Console.SetCursorPosition(x, y);
@@ -403,7 +419,7 @@ namespace Zandvoort_xD
                     foreach (string s in _StraightW)
                     {
                         y++;
-                        Console.WriteLine(s);
+                        drawString(s, section);
                         Console.SetCursorPosition(x, y);
                     }
                     x -= 5;
@@ -417,7 +433,7 @@ namespace Zandvoort_xD
                     foreach (string s in _finishE)
                     {
                         y++;
-                        Console.WriteLine(s);
+                        drawString(s, section);
                         Console.SetCursorPosition(x, y);
                     }
                     x += 2;
@@ -428,14 +444,50 @@ namespace Zandvoort_xD
             }
         }
 
-        public static string DrawPlayers(string str, IParticipant LeftPlayer, IParticipant RightPlayer)
+        public static string DrawPlayers(string str, IParticipant? LeftPlayer, IParticipant? RightPlayer)
         {
-            char LeftDriverNumber = LeftPlayer.Name[LeftPlayer.Name.Length - 1];
-            char RightDriverNumber = RightPlayer.Name[RightPlayer.Name.Length - 1];
+            if (LeftPlayer != null)
+            {
+                char LeftDriverNumber = LeftPlayer.Name[LeftPlayer.Name.Length - 1];
+                str = str.Replace("L", LeftDriverNumber.ToString());
+            }
+            else { str = "00000"; }
 
-            str = str.Replace("L", LeftDriverNumber.ToString());
-            str = str.Replace("R ", RightDriverNumber.ToString() + " ");
+            if (RightPlayer != null)
+            {
+                char RightDriverNumber = RightPlayer.Name[RightPlayer.Name.Length - 1];
+                str = str.Replace("R", RightDriverNumber.ToString());
+            }
+            else if (RightPlayer == null){ str = "00000"; }
+
             return str;
+        }
+
+        public static void drawString(string s, Section section)
+        {
+            string str = s;
+            if ((s.Contains("R") || s.Contains("L")))
+            {
+                IParticipant Left = null;
+                IParticipant Right = null;
+
+                SecD = Data.CurrentRace.GetSectionData(section);
+
+                Left = SecD.Left;
+                Right = SecD.Right;
+
+                //Left = Data.CurrentRace.Participants[nummer];
+                //Right = Data.CurrentRace.Participants[nummer];
+                if (Right != null)
+                {
+                    str = DrawPlayers(s, Left, Right);
+                }
+                if (Left != null)
+                {
+                    str = DrawPlayers(s, Left, Right);
+                }
+            }
+            Console.WriteLine(str);
         }
     }
 }

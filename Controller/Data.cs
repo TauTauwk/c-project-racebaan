@@ -38,7 +38,7 @@ namespace Controller
             num++;
             int teamColor = (num % 5);
 
-            Car car = new Car(100, 100, 100, false);
+            Car car = new Car(100, 100, 10, false);
             Driver driver = new Driver("driver" + num, 0, car, (TeamColors)teamColor);
             Competition?.Participants?.Add(driver);
         }

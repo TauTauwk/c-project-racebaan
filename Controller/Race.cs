@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Timers;
 using static Model.DriverChangedEventsArgs;
@@ -12,9 +13,8 @@ namespace Controller
     {
         public Track Track { get; set; }
         public DateTime StartTime { get; set; }
-
         public List<IParticipant>? Participants { get; set; } = new List<IParticipant> { };
-        public event DriverChanged? driverChanged;
+        public event EventHandler<DriverChangedEventsArgs> driverChanged;
 
         private System.Timers.Timer timer;
 
@@ -25,14 +25,17 @@ namespace Controller
         {
             Track = track;
             Participants = participants;
-            GiveStartPositions(track, participants);
-            timer = new System.Timers.Timer(500);
+            RandomizeEquipment();
+            
+            timer = new System.Timers.Timer();
+            timer.Interval = 500;
             timer.Elapsed += OnTimedEvent;
         }
 
         private void OnTimedEvent(object? sender, EventArgs e)
         {
-            ChangeDriverPosition();
+            ChangeDriverPosition(Track);
+            driverChanged?.Invoke(this, new DriverChangedEventsArgs(Track));
         }
 
         public SectionData GetSectionData(Section section)
@@ -41,10 +44,6 @@ namespace Controller
             {
                 _positions.Add(section, new SectionData());
             }
-            else
-            {
-                _positions[section] = new SectionData();
-            }
             return _positions[section];
         }
 
@@ -52,15 +51,15 @@ namespace Controller
         {
             foreach (var participant in Participants)
             {
-                participant.Equipment.Quality = _random.Next(10);
-                participant.Equipment.Performance = _random.Next(5);
+                participant.Equipment.Quality = _random.Next(1,10);
+                participant.Equipment.Performance = _random.Next(1,5);
             }
         }
 
         public void GiveStartPositions(Track track, List<IParticipant>? participants)
         {
             int nummer = 0;
-            foreach (Section s in track.Sections)
+            foreach (Section s in Data.CurrentRace.Track.Sections)
             {
                 var SDL = GetSectionData(s).Left;
                 var SDR = GetSectionData(s).Right;
@@ -89,11 +88,12 @@ namespace Controller
         public void start()
         {
             timer.Start();
+            GiveStartPositions(Track, Participants);
         }
 
-        public void ChangeDriverPosition()
+        public void ChangeDriverPosition(Track track)
         {
-            LinkedList<Section> Sections = Track.Sections;
+            LinkedList<Section> Sections = Data.CurrentRace.Track.Sections;
 
             for (int i = 0; i < Sections.Count; i++)
             {
@@ -101,42 +101,60 @@ namespace Controller
                 Section section = Sections.ElementAt(i);
 
                 SectionData sd = GetSectionData(section);
-                SectionData sdN = GetSectionData(Sections.ElementAt(i+1));
-
-                if (sd.Left != null)
+                SectionData sdN = GetSectionData(section);
+                int j = i + 1;
+                if (j < Sections.Count)
                 {
-                    //the formula to calculate the actual speed of a driver
-                    int performance = sd.Left.Equipment.Performance;
-                    int speed = sd.Left.Equipment.Speed;
-                    int actualSpeed = speed * performance;
+                    Section sectionN = Sections.ElementAt(i + 1);
+                    sdN = GetSectionData(sectionN);
+                }
+                else { }
 
-                    if ((sd.DistanceLeft += actualSpeed) >= 100)
-                    {
-                        //adding the driver to his next position
-                        sdN.Left = sd.Left;
-                        sdN.DistanceLeft = sd.DistanceLeft - 100;
-
-                        //removing the drivers from last position
-                        sd.Left = null;
-                        sd.DistanceLeft = 0;
-                    }
+                if (sd.Right != null && sdN.Right == null)
+                {
+                    sdN.Right = sd.Right;
+                    sd.Right = null;
                 }
 
-                if (sd.Right != null)
-                {
-                    int performance = sd.Right.Equipment.Performance;
-                    int speed = sd.Right.Equipment.Speed;
-                    int actualSpeed = speed * performance;
+                //if (sd.Left != null && sdN.Left == null)
+                //{
+                //    sdN.Left = sd.Left;
+                //}
 
-                    if ((sd.DistanceRight += actualSpeed) >= 100)
-                    {
-                        sdN.Right = sd.Left;
-                        sdN.DistanceRight = sd.DistanceRight - 100;
+                //if (sd.Left != null && sdN.Left == null)
+                //{
+                //    //the formula to calculate the actual speed of a driver
+                //    int performance = sd.Left.Equipment.Performance;
+                //    int speed = sd.Left.Equipment.Speed;
+                //    int actualSpeed = speed * performance;
 
-                        sd.Right = null;
-                        sd.DistanceRight = 0;
-                    }
-                }
+                //    if ((sd.DistanceLeft + actualSpeed) >= 100)
+                //    {
+                //        //adding the driver to his next position
+                //        sdN.Left = sd.Left;
+                //        sdN.DistanceLeft = sd.DistanceLeft - 100;
+
+                //        //removing the drivers from last position
+                //        sd.Left = null;
+                //        sd.DistanceLeft = 0;
+                //    }
+                //}
+
+                //if (sd.Right != null)
+                //{
+                //    int performance = sd.Right.Equipment.Performance;
+                //    int speed = sd.Right.Equipment.Speed;
+                //    int actualSpeed = speed * performance;
+
+                //    if ((sd.DistanceRight += actualSpeed) >= 100)
+                //    {
+                //        sdN.Right = sd.Left;
+                //        sdN.DistanceRight = sd.DistanceRight - 100;
+
+                //        sd.Right = null;
+                //        sd.DistanceRight = 0;
+                //    }
+                //}
             }
         }
     }
