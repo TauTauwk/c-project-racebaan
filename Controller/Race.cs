@@ -28,13 +28,13 @@ namespace Controller
             RandomizeEquipment();
             
             timer = new System.Timers.Timer();
-            timer.Interval = 500;
+            timer.Interval = 1000;
             timer.Elapsed += OnTimedEvent;
         }
 
         private void OnTimedEvent(object? sender, EventArgs e)
         {
-            ChangeDriverPosition(Track);
+            ChangeDriverPosition(/*Track*/);
             driverChanged?.Invoke(this, new DriverChangedEventsArgs(Track));
         }
 
@@ -93,40 +93,51 @@ namespace Controller
 
         public void ChangeDriverPosition(Track track)
         {
-            LinkedList<Section> Sections = Data.CurrentRace.Track.Sections;
-
-            for (int i = 0; i < Sections.Count; i++)
+            for (int i = 0; i < track.Sections.Count(); i++)
             {
-                //making it easy to reference to regular used attributes
-                Section section = Sections.ElementAt(i);
-
-                SectionData sd = GetSectionData(section);
-                SectionData sdN = GetSectionData(section);
-                int j = i + 1;
-                if (j < Sections.Count)
+                if (i < track.Sections.Count - 1)
                 {
-                    Section sectionN = Sections.ElementAt(i + 1);
-                    sdN = GetSectionData(sectionN);
-                }
-                else { }
+                    var sdP = track.Sections.ElementAt(i);
 
-                if (sd.Right != null && sdN.Right == null)
-                {
-                    sdN.Right = sd.Right;
-                    sd.Right = null;
                 }
+            }
 
-                //if (sd.Left != null && sdN.Left == null)
-                //{
-                //    sdN.Left = sd.Left;
-                //}
+
+            //for (int i = (Sections.Count - 1); i >= 0 ; i--)
+            //{
+                
+            //    //making it easy to reference to regular used attributes
+            //    Section section = Sections.ElementAt(i);
+            //    SectionData sd = GetSectionData(section);
+            //    SectionData sdN = GetSectionData(section);
+
+            //    int j = i + 1;
+            //    if (j < Sections.Count)
+            //    {
+            //        Section sectionN = Sections.ElementAt(i + 1);
+            //        sdN = GetSectionData(sectionN);
+            //    }
+
+            //    if (sd.Right != null && (sdN.Right == null || sdN.Left == null))
+            //    {
+            //        sdN.Right = sd.Right;
+            //        sd.Right = null;
+            //    }
+
+            //    if (sd.Left != null && (sdN.Left == null || sdN.Right == null))
+            //    {
+            //        sdN.Left = sd.Left;
+            //        sd.Left = null;
+            //    }
+
+                //int performance = sd.Left.Equipment.Performance;
+                //int speed = sd.Left.Equipment.Speed;
+                //int actualSpeed = speed * performance;
 
                 //if (sd.Left != null && sdN.Left == null)
                 //{
                 //    //the formula to calculate the actual speed of a driver
-                //    int performance = sd.Left.Equipment.Performance;
-                //    int speed = sd.Left.Equipment.Speed;
-                //    int actualSpeed = speed * performance;
+
 
                 //    if ((sd.DistanceLeft + actualSpeed) >= 100)
                 //    {
@@ -155,7 +166,7 @@ namespace Controller
                 //        sd.DistanceRight = 0;
                 //    }
                 //}
-            }
+            //}
         }
     }
 }
