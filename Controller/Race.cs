@@ -28,13 +28,18 @@ namespace Controller
             RandomizeEquipment();
             
             timer = new System.Timers.Timer();
-            timer.Interval = 1000;
+            timer.Interval = 500;
             timer.Elapsed += OnTimedEvent;
         }
 
         private void OnTimedEvent(object? sender, EventArgs e)
         {
-            ChangeDriverPosition(/*Track*/);
+            ChangeDriverPosition(Track);
+            Console.SetCursorPosition(0, 0);
+            if (GetSectionData(Track.Sections.ElementAt(4)).Left != null && GetSectionData(Track.Sections.ElementAt(4)).Right != null)
+            {
+                Console.WriteLine(GetSectionData(Track.Sections.ElementAt(4)).Left.Name.ToString() + "\n" + GetSectionData(Track.Sections.ElementAt(4)).Right.Name.ToString());
+            }
             driverChanged?.Invoke(this, new DriverChangedEventsArgs(Track));
         }
 
@@ -91,14 +96,73 @@ namespace Controller
             GiveStartPositions(Track, Participants);
         }
 
+
+
         public void ChangeDriverPosition(Track track)
         {
             for (int i = 0; i < track.Sections.Count(); i++)
             {
                 if (i < track.Sections.Count - 1)
                 {
-                    var sdP = track.Sections.ElementAt(i);
+                    SectionData sdP;
+                    SectionData sdC;
+                    if (track.Sections.ElementAt(i) == track.Sections.First())
+                    {
+                        sdP = GetSectionData(track.Sections.Last());
+                        sdC = GetSectionData(track.Sections.ElementAt(i));
+                    }
+                    else
+                    {
+                        sdP = GetSectionData(track.Sections.ElementAt(i - 1));
+                        sdC = GetSectionData(track.Sections.ElementAt(i));
+                    }
 
+                    if (sdC.Left == null)
+                    {
+                        if (sdP.DistanceLeft > 100)
+                        {
+                            sdC.Left = sdP.Left;
+                            sdP.Left = null;
+                            sdP.DistanceLeft = 0;
+                            continue;
+                        }
+                        if (sdP.DistanceRight > 100)
+                        {
+                            sdC.Left = sdP.Right;
+                            sdP.Right = null;
+                            sdP.DistanceRight = 0;
+                            continue;
+                        }
+                    }
+                    if (sdC.Right == null)
+                    {
+                        if (sdP.DistanceRight > 100)
+                        {
+                            sdC.Right = sdP.Right;
+                            sdP.Right = null;
+                            sdP.DistanceRight = 0;
+                            continue;
+                        }
+                        if (sdP.DistanceLeft > 100)
+                        {
+                            sdC.Right = sdP.Left;
+                            sdP.Left = null;
+                            sdP.DistanceLeft = 0;
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        int performanceL = sdC.Left.Equipment.Performance;
+                        int speedL = sdC.Left.Equipment.Speed;
+                        int actualSpeedL = speedL * performanceL;
+                        sdC.DistanceLeft += actualSpeedL;
+
+                        int performanceR = sdC.Right.Equipment.Performance;
+                        int speedR = sdC.Right.Equipment.Speed;
+                        int actualSpeedR = speedR * performanceR;
+                        sdC.DistanceRight += actualSpeedR;
+                    }
                 }
             }
 
