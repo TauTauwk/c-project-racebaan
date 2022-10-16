@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.Intrinsics.Arm;
 using System.Text;
 using System.Timers;
-using static Model.DriverChangedEventsArgs;
 
 namespace Controller
 {
@@ -35,10 +35,11 @@ namespace Controller
         private void OnTimedEvent(object? sender, EventArgs e)
         {
             ChangeDriverPosition(Track);
-            Console.SetCursorPosition(0, 0);
-            if (GetSectionData(Track.Sections.ElementAt(4)).Left != null && GetSectionData(Track.Sections.ElementAt(4)).Right != null)
+            Console.SetCursorPosition(0, 1);
+            int i = 2;
+            if (GetSectionData(Track.Sections.ElementAt(i)).Left != null && GetSectionData(Track.Sections.ElementAt(i)).Right != null)
             {
-                Console.WriteLine(GetSectionData(Track.Sections.ElementAt(4)).Left.Name.ToString() + "\n" + GetSectionData(Track.Sections.ElementAt(4)).Right.Name.ToString());
+                Console.WriteLine(GetSectionData(Track.Sections.ElementAt(i)).Left.Name.ToString() + "\n" + GetSectionData(Track.Sections.ElementAt(i)).Right.Name.ToString());
             }
             driverChanged?.Invoke(this, new DriverChangedEventsArgs(Track));
         }
@@ -64,28 +65,17 @@ namespace Controller
         public void GiveStartPositions(Track track, List<IParticipant>? participants)
         {
             int nummer = 0;
-            foreach (Section s in Data.CurrentRace.Track.Sections)
+            foreach (Section s in track.Sections)
             {
-                var SDL = GetSectionData(s).Left;
-                var SDR = GetSectionData(s).Right;
-                var deelnemer = participants?[nummer];
-
-                if (s.SectionType.ToString() == "StartE" && participants?.Count < 8)
+                if (s.SectionType.ToString() == "StartE")
                 {
-                    if (nummer % 2 == 1)
+                    if (nummer < (participants.Count - 1))
                     {
-                        SDL = participants[nummer];
+                        GetSectionData(s).Left = participants[nummer];
+                        nummer++;
+                        GetSectionData(s).Right = participants[nummer];
                         nummer++;
                     }
-                    else if (nummer % 2 == 0)
-                    {
-                        SDR = participants?[nummer];
-                        nummer++;
-                    }
-                }
-                else if (!(participants?.Count <= 8))
-                {
-                    Console.WriteLine("Er zijn te veel deelnemers");
                 }
             }
         }
@@ -96,13 +86,12 @@ namespace Controller
             GiveStartPositions(Track, Participants);
         }
 
-
-
         public void ChangeDriverPosition(Track track)
         {
-            for (int i = 0; i < track.Sections.Count(); i++)
+            int i = 0;
+            while (i < track.Sections.Count()+1)
             {
-                if (i < track.Sections.Count - 1)
+                if (i < track.Sections.Count())
                 {
                     SectionData sdP;
                     SectionData sdC;
@@ -113,57 +102,66 @@ namespace Controller
                     }
                     else
                     {
-                        sdP = GetSectionData(track.Sections.ElementAt(i - 1));
-                        sdC = GetSectionData(track.Sections.ElementAt(i));
+                        // sdC == count+1 en dat doet hij niet dus blijven ze 1 voor de finish staan
+                        if (track.Sections.ElementAt(i-1) == track.Sections.Last())
+                        {
+                            sdC = GetSectionData(track.Sections.First());
+                            sdP = GetSectionData(track.Sections.Last());
+                            i = 0;
+                        }
+                        else
+                        {
+                            sdP = GetSectionData(track.Sections.ElementAt(i - 1));
+                            sdC = GetSectionData(track.Sections.ElementAt(i));
+                        }
                     }
 
-                    if (sdC.Left == null)
-                    {
-                        if (sdP.DistanceLeft > 100)
-                        {
-                            sdC.Left = sdP.Left;
-                            sdP.Left = null;
-                            sdP.DistanceLeft = 0;
-                            continue;
-                        }
-                        if (sdP.DistanceRight > 100)
-                        {
-                            sdC.Left = sdP.Right;
-                            sdP.Right = null;
-                            sdP.DistanceRight = 0;
-                            continue;
-                        }
-                    }
                     if (sdC.Right == null)
                     {
-                        if (sdP.DistanceRight > 100)
+                        if (sdP.DistanceRight >= 100)
                         {
                             sdC.Right = sdP.Right;
                             sdP.Right = null;
                             sdP.DistanceRight = 0;
-                            continue;
                         }
-                        if (sdP.DistanceLeft > 100)
+                        else if (sdP.DistanceLeft >= 100)
                         {
                             sdC.Right = sdP.Left;
                             sdP.Left = null;
                             sdP.DistanceLeft = 0;
-                            continue;
                         }
                     }
-                    else
+                    else if (sdC.Right != null)
                     {
-                        int performanceL = sdC.Left.Equipment.Performance;
-                        int speedL = sdC.Left.Equipment.Speed;
-                        int actualSpeedL = speedL * performanceL;
-                        sdC.DistanceLeft += actualSpeedL;
-
                         int performanceR = sdC.Right.Equipment.Performance;
                         int speedR = sdC.Right.Equipment.Speed;
                         int actualSpeedR = speedR * performanceR;
                         sdC.DistanceRight += actualSpeedR;
                     }
+
+                    if (sdC.Left == null)
+                    {
+                        if (sdP.DistanceLeft >= 100)
+                        {
+                            sdC.Left = sdP.Left;
+                            sdP.Left = null;
+                            sdP.DistanceLeft = 0;
+                        }else if (sdP.DistanceRight >= 100)
+                        {
+                            sdC.Left = sdP.Right;
+                            sdP.Right = null;
+                            sdP.DistanceRight = 0;
+                        }
+                    }
+                    else if (sdC.Left != null)
+                    {
+                        int performanceL = sdC.Left.Equipment.Performance;
+                        int speedL = sdC.Left.Equipment.Speed;
+                        int actualSpeedL = speedL * performanceL;
+                        sdC.DistanceLeft += actualSpeedL;
+                    }
                 }
+                i++;
             }
 
 

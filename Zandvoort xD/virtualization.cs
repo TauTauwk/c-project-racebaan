@@ -349,32 +349,38 @@ namespace Zandvoort_xD
                 {
                     foreach (string s in _StartE)
                     {
-                        string str = s;
                         y++;
-                        if ((s.Contains("R") || s.Contains("L")) && nummer < Data.CurrentRace?.Participants?.Count())
-                        {
-                            IParticipant Left;
-                            IParticipant Right;
-
-                            SecD = race.GetSectionData(section);
-                            SecD.Left = race.Participants[nummer];
-                            SecD.Right = race.Participants[nummer++];
-
-                            Left = SecD.Left;
-                            Right = SecD.Right;
-
-                            //Left = Data.CurrentRace.Participants[nummer];
-                            //Right = Data.CurrentRace.Participants[nummer];
-                            str = DrawPlayers(s, Left, Right);
-                        }
-                        Console.WriteLine(str);
+                        drawString(s, section);
                         Console.SetCursorPosition(x, y);
-                        //y++;
-                        //drawString(s, section);
-                        //Console.SetCursorPosition(x, y);
-
-                        
                     }
+                    //foreach (string s in _StartE)
+                    //{
+                    //    string str = s;
+                    //    y++;
+                    //    if ((s.Contains("R") || s.Contains("L")) && nummer < Data.CurrentRace?.Participants?.Count())
+                    //    {
+                    //        IParticipant Left;
+                    //        IParticipant Right;
+
+                    //        SecD = race.GetSectionData(section);
+                    //        SecD.Left = race.Participants[nummer];
+                    //        SecD.Right = race.Participants[nummer++];
+
+                    //        Left = SecD.Left;
+                    //        Right = SecD.Right;
+
+                    //        //Left = Data.CurrentRace.Participants[nummer];
+                    //        //Right = Data.CurrentRace.Participants[nummer];
+                    //        str = DrawPlayers(s, Left, Right);
+                    //    }
+                    //    Console.WriteLine(str);
+                    //    Console.SetCursorPosition(x, y);
+                    //    //y++;
+                    //    //drawString(s, section);
+                    //    //Console.SetCursorPosition(x, y);
+
+
+                    //}
                     x += 2;
                     y -= 5;
                     Console.SetCursorPosition(x, y);
