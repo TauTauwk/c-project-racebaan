@@ -1,6 +1,7 @@
 ﻿using Model;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Tracing;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.Intrinsics.Arm;
@@ -175,10 +176,7 @@ namespace Controller
                 }
                 if (_Finished.Where(x => x.Value >= 2).Count() == Participants.Count())
                 {
-                    timer.Stop();
-                    Console.Clear();
-                    Console.SetCursorPosition(0, 0);
-                    Console.WriteLine("The Race Has Ended");
+                    CleanUp();
                     break;
                 }
                 i++;
@@ -213,6 +211,19 @@ namespace Controller
             {
                 return false;
             }
+        }
+
+        private void CleanUp()
+        {
+            timer.Stop();
+            Console.Clear();
+            Console.SetCursorPosition(0, 0);
+            driverChanged = null;
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            Console.Clear();
+            Console.WriteLine("The Race Has Ended");
+            Console.WriteLine("A New Race Will Start Soon!");
         }
     }
 }
