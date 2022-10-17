@@ -20,6 +20,7 @@ namespace Controller
 
         private Random _random = new Random(DateTime.Now.Millisecond);
         private Dictionary<Section, SectionData> _positions = new Dictionary<Section, SectionData>();
+        private Dictionary<IParticipant, int> _Finished = new Dictionary<IParticipant, int>();
 
         public Race(Track track, List<IParticipant>? participants)
         {
@@ -35,12 +36,6 @@ namespace Controller
         private void OnTimedEvent(object? sender, EventArgs e)
         {
             ChangeDriverPosition(Track);
-            Console.SetCursorPosition(0, 1);
-            int i = 2;
-            if (GetSectionData(Track.Sections.ElementAt(i)).Left != null && GetSectionData(Track.Sections.ElementAt(i)).Right != null)
-            {
-                Console.WriteLine(GetSectionData(Track.Sections.ElementAt(i)).Left.Name.ToString() + "\n" + GetSectionData(Track.Sections.ElementAt(i)).Right.Name.ToString());
-            }
             driverChanged?.Invoke(this, new DriverChangedEventsArgs(Track));
         }
 
@@ -57,8 +52,8 @@ namespace Controller
         {
             foreach (var participant in Participants)
             {
-                participant.Equipment.Quality = _random.Next(1,10);
-                participant.Equipment.Performance = _random.Next(1,5);
+                participant.Equipment.Quality = _random.Next(1,11);
+                participant.Equipment.Performance = _random.Next(1,6);
             }
         }
 
@@ -102,7 +97,6 @@ namespace Controller
                     }
                     else
                     {
-                        // sdC == count+1 en dat doet hij niet dus blijven ze 1 voor de finish staan
                         if (track.Sections.ElementAt(i-1) == track.Sections.Last())
                         {
                             sdC = GetSectionData(track.Sections.First());
@@ -138,7 +132,7 @@ namespace Controller
                         int actualSpeedR = speedR * performanceR;
                         sdC.DistanceRight += actualSpeedR;
                     }
-
+                    
                     if (sdC.Left == null)
                     {
                         if (sdP.DistanceLeft >= 100)
@@ -146,7 +140,8 @@ namespace Controller
                             sdC.Left = sdP.Left;
                             sdP.Left = null;
                             sdP.DistanceLeft = 0;
-                        }else if (sdP.DistanceRight >= 100)
+                        }
+                        else if (sdP.DistanceRight >= 100)
                         {
                             sdC.Left = sdP.Right;
                             sdP.Right = null;
@@ -160,75 +155,64 @@ namespace Controller
                         int actualSpeedL = speedL * performanceL;
                         sdC.DistanceLeft += actualSpeedL;
                     }
+
+                    if (track.Sections.Last() == track.Sections.ElementAt(i) && sdC.Left != null && sdC.DistanceLeft >= 100)
+                    {
+                        if (IsFinished(sdC.Left))
+                        {
+                            sdC.Left = null;
+                            sdC.DistanceLeft = 0;
+                        }
+                    }
+                    if (track.Sections.Last() == track.Sections.ElementAt(i) && sdC.Right != null && sdC.DistanceRight >= 100)
+                    {
+                        if (IsFinished(sdC.Right))
+                        {
+                            sdC.Right = null;
+                            sdC.DistanceRight = 0;
+                        }
+                    }
+                }
+                if (_Finished.Where(x => x.Value >= 2).Count() == Participants.Count())
+                {
+                    timer.Stop();
+                    Console.Clear();
+                    Console.SetCursorPosition(0, 0);
+                    Console.WriteLine("The Race Has Ended");
+                    break;
                 }
                 i++;
             }
+        }
 
+        public int AmountOfLaps(IParticipant participant)
+        {
+            if (!_Finished.ContainsKey(participant))
+            {
+                _Finished.Add(participant, 1);
+            }
+            else if(_Finished.ContainsKey(participant))
+            {
+                _Finished[participant] += 1;
+            }
+            Console.SetCursorPosition(0, 0);
+            foreach (var pair in _Finished)
+            {
+                Console.WriteLine(pair.ToString());
+            }
+            return _Finished[participant];
+        }
 
-            //for (int i = (Sections.Count - 1); i >= 0 ; i--)
-            //{
-                
-            //    //making it easy to reference to regular used attributes
-            //    Section section = Sections.ElementAt(i);
-            //    SectionData sd = GetSectionData(section);
-            //    SectionData sdN = GetSectionData(section);
-
-            //    int j = i + 1;
-            //    if (j < Sections.Count)
-            //    {
-            //        Section sectionN = Sections.ElementAt(i + 1);
-            //        sdN = GetSectionData(sectionN);
-            //    }
-
-            //    if (sd.Right != null && (sdN.Right == null || sdN.Left == null))
-            //    {
-            //        sdN.Right = sd.Right;
-            //        sd.Right = null;
-            //    }
-
-            //    if (sd.Left != null && (sdN.Left == null || sdN.Right == null))
-            //    {
-            //        sdN.Left = sd.Left;
-            //        sd.Left = null;
-            //    }
-
-                //int performance = sd.Left.Equipment.Performance;
-                //int speed = sd.Left.Equipment.Speed;
-                //int actualSpeed = speed * performance;
-
-                //if (sd.Left != null && sdN.Left == null)
-                //{
-                //    //the formula to calculate the actual speed of a driver
-
-
-                //    if ((sd.DistanceLeft + actualSpeed) >= 100)
-                //    {
-                //        //adding the driver to his next position
-                //        sdN.Left = sd.Left;
-                //        sdN.DistanceLeft = sd.DistanceLeft - 100;
-
-                //        //removing the drivers from last position
-                //        sd.Left = null;
-                //        sd.DistanceLeft = 0;
-                //    }
-                //}
-
-                //if (sd.Right != null)
-                //{
-                //    int performance = sd.Right.Equipment.Performance;
-                //    int speed = sd.Right.Equipment.Speed;
-                //    int actualSpeed = speed * performance;
-
-                //    if ((sd.DistanceRight += actualSpeed) >= 100)
-                //    {
-                //        sdN.Right = sd.Left;
-                //        sdN.DistanceRight = sd.DistanceRight - 100;
-
-                //        sd.Right = null;
-                //        sd.DistanceRight = 0;
-                //    }
-                //}
-            //}
+        public bool IsFinished(IParticipant participant)
+        {
+            if (AmountOfLaps(participant) == 2)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }
