@@ -16,6 +16,7 @@ namespace Controller
         public DateTime StartTime { get; set; }
         public List<IParticipant>? Participants { get; set; } = new List<IParticipant> { };
         public event EventHandler<DriverChangedEventsArgs> driverChanged;
+        public event EventHandler nextRace;
 
         private System.Timers.Timer timer;
 
@@ -28,6 +29,7 @@ namespace Controller
             Track = track;
             Participants = participants;
             RandomizeEquipment();
+            nextRace?.Invoke(this, new EventArgs());
             
             timer = new System.Timers.Timer();
             timer.Interval = 500;
@@ -49,7 +51,7 @@ namespace Controller
             return _positions[section];
         }
 
-        public void RandomizeEquipment()
+        private void RandomizeEquipment()
         {
             foreach (var participant in Participants)
             {
@@ -58,7 +60,7 @@ namespace Controller
             }
         }
 
-        public void GiveStartPositions(Track track, List<IParticipant>? participants)
+        private void GiveStartPositions(Track track, List<IParticipant>? participants)
         {
             int nummer = 0;
             foreach (Section s in track.Sections)
@@ -82,7 +84,7 @@ namespace Controller
             GiveStartPositions(Track, Participants);
         }
 
-        public void ChangeDriverPosition(Track track)
+        private void ChangeDriverPosition(Track track)
         {
             int i = 0;
             while (i < track.Sections.Count()+1)
@@ -116,12 +118,14 @@ namespace Controller
                         if (sdP.DistanceRight >= 100)
                         {
                             sdC.Right = sdP.Right;
+                            sdC.DistanceRight = sdP.DistanceRight - 100;
                             sdP.Right = null;
                             sdP.DistanceRight = 0;
                         }
                         else if (sdP.DistanceLeft >= 100)
                         {
                             sdC.Right = sdP.Left;
+                            sdC.DistanceRight = sdP.DistanceLeft - 100;
                             sdP.Left = null;
                             sdP.DistanceLeft = 0;
                         }
@@ -139,12 +143,14 @@ namespace Controller
                         if (sdP.DistanceLeft >= 100)
                         {
                             sdC.Left = sdP.Left;
+                            sdC.DistanceLeft = sdP.DistanceLeft - 100;
                             sdP.Left = null;
                             sdP.DistanceLeft = 0;
                         }
                         else if (sdP.DistanceRight >= 100)
                         {
                             sdC.Left = sdP.Right;
+                            sdC.DistanceLeft = sdP.DistanceRight - 100;
                             sdP.Right = null;
                             sdP.DistanceRight = 0;
                         }
@@ -183,7 +189,7 @@ namespace Controller
             }
         }
 
-        public int AmountOfLaps(IParticipant participant)
+        private int AmountOfLaps(IParticipant participant)
         {
             if (!_Finished.ContainsKey(participant))
             {
@@ -201,7 +207,7 @@ namespace Controller
             return _Finished[participant];
         }
 
-        public bool IsFinished(IParticipant participant)
+        private bool IsFinished(IParticipant participant)
         {
             if (AmountOfLaps(participant) == 2)
             {
@@ -216,7 +222,6 @@ namespace Controller
         private void CleanUp()
         {
             timer.Stop();
-            Console.Clear();
             Console.SetCursorPosition(0, 0);
             driverChanged = null;
             GC.Collect();
@@ -224,6 +229,8 @@ namespace Controller
             Console.Clear();
             Console.WriteLine("The Race Has Ended");
             Console.WriteLine("A New Race Will Start Soon!");
+            Thread.Sleep(3000);
+            nextRace?.Invoke(this, new EventArgs());
         }
     }
 }

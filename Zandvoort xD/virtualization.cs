@@ -12,16 +12,18 @@ namespace Zandvoort_xD
     public static class Virtualization
     {
         private static SectionData SecD;
+
         public static void Initialize(Race race)
         {
             Console.Clear();
             race.driverChanged += DriverChanged;
         }
 
-        public static void DriverChanged(Object? sender, DriverChangedEventsArgs e)
+        private static void DriverChanged(Object? sender, DriverChangedEventsArgs e)
         {
             DrawTrack(Data.CurrentRace);
         }
+
         #region graphics
         #region finish
         private static string[] _finishE =
@@ -212,7 +214,7 @@ namespace Zandvoort_xD
         //    return result;
         //}
 
-        public static void DrawTrack(Race race)
+        private static void DrawTrack(Race race)
         {
             int x = 25;
             int y = 24;
@@ -450,7 +452,7 @@ namespace Zandvoort_xD
             }
         }
 
-        public static string DrawPlayers(string str, IParticipant? LeftPlayer, IParticipant? RightPlayer)
+        private static string DrawPlayers(string str, IParticipant? LeftPlayer, IParticipant? RightPlayer)
         {
             string s = str;
             if (LeftPlayer != null)
@@ -468,7 +470,7 @@ namespace Zandvoort_xD
             return str;
         }
 
-        public static void drawString(string s, Section section)
+        private static void drawString(string s, Section section)
         {
             string str = s;
             if ((s.Contains("R") || s.Contains("L")))

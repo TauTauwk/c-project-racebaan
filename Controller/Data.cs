@@ -33,7 +33,7 @@ namespace Controller
             AddTrack();
         }
 
-        static public void AddParticipant()
+        static private void AddParticipant()
         {
             num++;
             int teamColor = (num % 5);
@@ -43,7 +43,7 @@ namespace Controller
             Competition?.Participants?.Add(driver);
         }
 
-        static public void AddTrack()
+        static private void AddTrack()
         {
             trackNum++;
             trackNum = trackNum % 2;
@@ -84,7 +84,7 @@ namespace Controller
 
         static public void NextRace() 
         {
-            var track = Competition?.NextTrack();
+            var track = Competition.NextTrack();
             if (track != null)
             {
                 CurrentRace = new Race(track, Competition?.Participants);
