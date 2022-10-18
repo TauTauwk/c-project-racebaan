@@ -9,12 +9,13 @@ namespace Model
 {
     public class Competition
     {
-        public List<IParticipant>? Participants { get; set; }
-        public Queue<Track>? Tracks { get; set; }
+        public List<IParticipant> Participants { get; set; }
+        public Queue<Track> Tracks { get; set; }
 
         public Track? NextTrack()
         {
-            if (Tracks != null || Tracks?.Count > 0)
+            //if there is any track left in the queue dequeue it
+            if (Tracks.Any())
             {
                 return Tracks.Dequeue();
             }

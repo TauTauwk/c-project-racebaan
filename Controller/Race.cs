@@ -15,8 +15,8 @@ namespace Controller
         public Track Track { get; set; }
         public DateTime StartTime { get; set; }
         public List<IParticipant>? Participants { get; set; } = new List<IParticipant> { };
-        public event EventHandler<DriverChangedEventsArgs> driverChanged;
-        public event EventHandler nextRace;
+        public event EventHandler<DriverChangedEventsArgs> DriverChanged;
+        public event EventHandler<EventArgs> FinishedRace;
 
         private System.Timers.Timer timer;
 
@@ -29,19 +29,23 @@ namespace Controller
             Track = track;
             Participants = participants;
             RandomizeEquipment();
-            nextRace?.Invoke(this, new EventArgs());
+            //if a race is finished you want the event to be triggerd so the next track will appear
+            FinishedRace += OnNextRace;
             
+            //lets something happen every half a second
             timer = new System.Timers.Timer();
             timer.Interval = 500;
             timer.Elapsed += OnTimedEvent;
         }
 
+        //here is the something that happens
         private void OnTimedEvent(object? sender, EventArgs e)
         {
             ChangeDriverPosition(Track);
-            driverChanged?.Invoke(this, new DriverChangedEventsArgs(Track));
+            DriverChanged?.Invoke(this, new DriverChangedEventsArgs(Track));
         }
-
+        
+        //get the sectionData for a section or adds data if the key was not already known
         public SectionData GetSectionData(Section section)
         {
             if (!_positions.ContainsKey(section))
@@ -51,6 +55,7 @@ namespace Controller
             return _positions[section];
         }
 
+        //create some kind of randomness in the race
         private void RandomizeEquipment()
         {
             foreach (var participant in Participants)
@@ -60,6 +65,7 @@ namespace Controller
             }
         }
 
+        //all drivers need a start position on the grid
         private void GiveStartPositions(Track track, List<IParticipant>? participants)
         {
             int nummer = 0;
@@ -78,12 +84,14 @@ namespace Controller
             }
         }
 
+        //starts the timer and will call to tell that drivers need a start position
         public void start()
         {
             timer.Start();
             GiveStartPositions(Track, Participants);
         }
 
+        //every time someone moves this is triggerd
         private void ChangeDriverPosition(Track track)
         {
             int i = 0;
@@ -93,6 +101,7 @@ namespace Controller
                 {
                     SectionData sdP;
                     SectionData sdC;
+                    //check if a driver is at the firt section than the previous will be the last section
                     if (track.Sections.ElementAt(i) == track.Sections.First())
                     {
                         sdP = GetSectionData(track.Sections.Last());
@@ -100,21 +109,25 @@ namespace Controller
                     }
                     else
                     {
+                        //chack if the sdP (previous section) is equal to the last than the sdC will be the First
                         if (track.Sections.ElementAt(i-1) == track.Sections.Last())
                         {
                             sdC = GetSectionData(track.Sections.First());
                             sdP = GetSectionData(track.Sections.Last());
                             i = 0;
                         }
+                        //default
                         else
                         {
                             sdP = GetSectionData(track.Sections.ElementAt(i - 1));
                             sdC = GetSectionData(track.Sections.ElementAt(i));
                         }
                     }
-
+                    //if sdC.Right is empty you want a driver to be able to go there
                     if (sdC.Right == null)
                     {
+                        //but only if he has driven more than 100 meters
+                        //comming from the previous section's right
                         if (sdP.DistanceRight >= 100)
                         {
                             sdC.Right = sdP.Right;
@@ -122,6 +135,7 @@ namespace Controller
                             sdP.Right = null;
                             sdP.DistanceRight = 0;
                         }
+                        //he can also come from the previous section's left
                         else if (sdP.DistanceLeft >= 100)
                         {
                             sdC.Right = sdP.Left;
@@ -130,6 +144,7 @@ namespace Controller
                             sdP.DistanceLeft = 0;
                         }
                     }
+                    //is the section not free, keep driving on this section
                     else if (sdC.Right != null)
                     {
                         int performanceR = sdC.Right.Equipment.Performance;
@@ -137,7 +152,7 @@ namespace Controller
                         int actualSpeedR = speedR * performanceR;
                         sdC.DistanceRight += actualSpeedR;
                     }
-                    
+                    //same goes for the left
                     if (sdC.Left == null)
                     {
                         if (sdP.DistanceLeft >= 100)
@@ -162,7 +177,7 @@ namespace Controller
                         int actualSpeedL = speedL * performanceL;
                         sdC.DistanceLeft += actualSpeedL;
                     }
-
+                    //check if a driver can pass the finish
                     if (track.Sections.Last() == track.Sections.ElementAt(i) && sdC.Left != null && sdC.DistanceLeft >= 100)
                     {
                         if (IsFinished(sdC.Left))
@@ -180,8 +195,11 @@ namespace Controller
                         }
                     }
                 }
+                //end of race
+                //check if all the drivers have done their laps
                 if (_Finished.Where(x => x.Value >= 2).Count() == Participants.Count())
                 {
+                    FinishedRace?.Invoke(this, EventArgs.Empty);
                     CleanUp();
                     break;
                 }
@@ -189,6 +207,7 @@ namespace Controller
             }
         }
 
+        //function counts the amount of laps a driver has ridden in a dictionary
         private int AmountOfLaps(IParticipant participant)
         {
             if (!_Finished.ContainsKey(participant))
@@ -207,6 +226,7 @@ namespace Controller
             return _Finished[participant];
         }
 
+        //chack if a driver has finished
         private bool IsFinished(IParticipant participant)
         {
             if (AmountOfLaps(participant) == 2)
@@ -219,18 +239,20 @@ namespace Controller
             }
         }
 
+        //cleans up the console after a race
         private void CleanUp()
         {
+            DriverChanged = null;
+            FinishedRace = null;
             timer.Stop();
-            Console.SetCursorPosition(0, 0);
-            driverChanged = null;
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
+
             Console.Clear();
-            Console.WriteLine("The Race Has Ended");
-            Console.WriteLine("A New Race Will Start Soon!");
-            Thread.Sleep(3000);
-            nextRace?.Invoke(this, new EventArgs());
+        }
+
+        //needed to check if a new race wants to start
+        private void OnNextRace(object? sender, EventArgs e)
+        {
+            Data.NextRace();
         }
     }
 }

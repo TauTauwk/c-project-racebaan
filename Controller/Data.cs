@@ -10,13 +10,15 @@ namespace Controller
 {
     static public class Data
     {
-        static public Competition? Competition { get; set; }
-        static public Race? CurrentRace { get; set; }
+        public static Competition? Competition { get; set; }
+        public static Race? CurrentRace { get; set; }
 
-        static private int num =  0;
-        static private int trackNum = 0;
+        public static event EventHandler<OnNextRaceEventArgs> NextRaceEvent;
 
-        static public void Initialize()
+        private static int num =  0;
+        private static int trackNum = 0;
+
+        public static void Initialize()
         {
             Competition = new Competition();
             Competition.Participants = new List<IParticipant>();
@@ -33,7 +35,9 @@ namespace Controller
             AddTrack();
         }
 
-        static private void AddParticipant()
+        //add a participant
+        //call per participant
+        private static void AddParticipant()
         {
             num++;
             int teamColor = (num % 5);
@@ -43,7 +47,9 @@ namespace Controller
             Competition?.Participants?.Add(driver);
         }
 
-        static private void AddTrack()
+        //adds a track to the queue
+        //call per track
+        private static void AddTrack()
         {
             trackNum++;
             trackNum = trackNum % 2;
@@ -82,12 +88,19 @@ namespace Controller
             }
         }
 
-        static public void NextRace() 
+        //gets the next race from the competition
+        public static void NextRace() 
         {
-            var track = Competition.NextTrack();
+            Track track = null;
+            if (Competition.NextTrack != null)
+            {
+                track = Competition.NextTrack();
+            }
             if (track != null)
             {
                 CurrentRace = new Race(track, Competition?.Participants);
+                NextRaceEvent?.Invoke(null, new OnNextRaceEventArgs(CurrentRace));
+                CurrentRace.start();
             }
         }
     }

@@ -12,6 +12,7 @@ namespace Zandvoort_xD // Note: actual namespace depends on the project name.
         static void Main(string[] args)
         {
             Data.Initialize();
+            Data.NextRaceEvent += Virtualization.OnNextRace;
             Data.NextRace();
             #region trackNameTest
             //Console.WriteLine("Track: " + CurrentRace.Track.Name + "\n");
@@ -28,7 +29,7 @@ namespace Zandvoort_xD // Note: actual namespace depends on the project name.
             //}
             #endregion
             Virtualization.Initialize(CurrentRace);
-            CurrentRace.start();
+
 
             for (; ; )
             {
