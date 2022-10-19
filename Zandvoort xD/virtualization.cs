@@ -458,17 +458,30 @@ namespace Zandvoort_xD
         //place the drivers on the placeholders
         private static string DrawPlayers(string str, IParticipant? LeftPlayer, IParticipant? RightPlayer)
         {
-            string s = str;
             if (LeftPlayer != null)
             {
-                char LeftDriverNumber = LeftPlayer.Name[LeftPlayer.Name.Length - 1];
-                str = str.Replace("L", LeftDriverNumber.ToString());
+                if (LeftPlayer.Equipment.IsBroken)
+                {
+                    str = str.Replace("L", "#");
+                }
+                else
+                {
+                    char LeftDriverNumber = LeftPlayer.Name[LeftPlayer.Name.Length - 1];
+                    str = str.Replace("L", LeftDriverNumber.ToString());
+                }
             }
 
             if (RightPlayer != null)
             {
-                char RightDriverNumber = RightPlayer.Name[RightPlayer.Name.Length - 1];
-                str = str.Replace("R", RightDriverNumber.ToString());
+                if (RightPlayer.Equipment.IsBroken)
+                {
+                    str = str.Replace("L", "#");
+                }
+                else
+                {
+                    char RightDriverNumber = RightPlayer.Name[RightPlayer.Name.Length - 1];
+                    str = str.Replace("R", RightDriverNumber.ToString());
+                }
             }
 
             return str;

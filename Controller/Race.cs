@@ -14,7 +14,9 @@ namespace Controller
     {
         public Track Track { get; set; }
         public DateTime StartTime { get; set; }
+
         public List<IParticipant>? Participants { get; set; } = new List<IParticipant> { };
+
         public event EventHandler<DriverChangedEventsArgs> DriverChanged;
         public event EventHandler<EventArgs> FinishedRace;
 
@@ -41,6 +43,8 @@ namespace Controller
         //here is the something that happens
         private void OnTimedEvent(object? sender, EventArgs e)
         {
+            MakeBroken();
+            FracturedButWhole();
             ChangeDriverPosition(Track);
             DriverChanged?.Invoke(this, new DriverChangedEventsArgs(Track));
         }
@@ -62,6 +66,46 @@ namespace Controller
             {
                 participant.Equipment.Quality = _random.Next(1,11);
                 participant.Equipment.Performance = _random.Next(1,6);
+            }
+        }
+        
+        //randomly makes a car broken based on their quality
+        private void MakeBroken()
+        {
+            Console.SetCursorPosition(0, 0);
+            foreach (var participant in Participants)
+            {
+                int quality = participant.Equipment.Quality;
+                int formula = 100 - (quality * 10); //quality 10 never breaks
+                if (formula != 0)
+                {
+                    int chance = _random.Next(1, (formula + 1)); //the number from the formula included
+
+                    if (!participant.Equipment.IsBroken && chance == 1)
+                    {
+                        participant.Equipment.IsBroken = true;
+                    }
+                }
+                Console.WriteLine(participant.Name + ", " + participant.Equipment.IsBroken);
+            }
+        }
+
+        private void FracturedButWhole()
+        {
+            foreach (var participant in Participants)
+            {
+                if (participant.Equipment.IsBroken)
+                {
+                    int quality = participant.Equipment.Quality;
+                    int formula = 10 - quality; //doesn't have to be 11 because quality 10 will never be broken
+                    int chance = _random.Next(1, (formula + 1)); //the number from the formula included
+
+                    if (chance == 1) //quality is max 10 11-10 = 1 
+                    {
+                        participant.Equipment.IsBroken = false;
+                        participant.Equipment.Speed -= 1; //after it is broken down speed will decrease by 1 point
+                    }
+                }
             }
         }
 
@@ -128,7 +172,7 @@ namespace Controller
                     {
                         //but only if he has driven more than 100 meters
                         //comming from the previous section's right
-                        if (sdP.DistanceRight >= 100)
+                        if (sdP.Right != null && sdP.DistanceRight >= 100 && !sdP.Right.Equipment.IsBroken)
                         {
                             sdC.Right = sdP.Right;
                             sdC.DistanceRight = sdP.DistanceRight - 100;
@@ -136,7 +180,7 @@ namespace Controller
                             sdP.DistanceRight = 0;
                         }
                         //he can also come from the previous section's left
-                        else if (sdP.DistanceLeft >= 100)
+                        else if (sdP.Left != null && sdP.DistanceLeft >= 100 && !sdP.Left.Equipment.IsBroken)
                         {
                             sdC.Right = sdP.Left;
                             sdC.DistanceRight = sdP.DistanceLeft - 100;
@@ -145,24 +189,25 @@ namespace Controller
                         }
                     }
                     //is the section not free, keep driving on this section
-                    else if (sdC.Right != null)
+                    else if (sdC.Right != null && !sdC.Right.Equipment.IsBroken)
                     {
                         int performanceR = sdC.Right.Equipment.Performance;
                         int speedR = sdC.Right.Equipment.Speed;
                         int actualSpeedR = speedR * performanceR;
+
                         sdC.DistanceRight += actualSpeedR;
                     }
                     //same goes for the left
                     if (sdC.Left == null)
                     {
-                        if (sdP.DistanceLeft >= 100)
+                        if (sdP.Left != null && sdP.DistanceLeft >= 100 && !sdP.Left.Equipment.IsBroken)
                         {
                             sdC.Left = sdP.Left;
                             sdC.DistanceLeft = sdP.DistanceLeft - 100;
                             sdP.Left = null;
                             sdP.DistanceLeft = 0;
                         }
-                        else if (sdP.DistanceRight >= 100)
+                        else if (sdP.Right != null && sdP.DistanceRight >= 100 && !sdP.Right.Equipment.IsBroken)
                         {
                             sdC.Left = sdP.Right;
                             sdC.DistanceLeft = sdP.DistanceRight - 100;
@@ -170,7 +215,7 @@ namespace Controller
                             sdP.DistanceRight = 0;
                         }
                     }
-                    else if (sdC.Left != null)
+                    else if (sdC.Left != null && !sdC.Left.Equipment.IsBroken)
                     {
                         int performanceL = sdC.Left.Equipment.Performance;
                         int speedL = sdC.Left.Equipment.Speed;
@@ -217,11 +262,6 @@ namespace Controller
             else if(_Finished.ContainsKey(participant))
             {
                 _Finished[participant] += 1;
-            }
-            Console.SetCursorPosition(0, 0);
-            foreach (var pair in _Finished)
-            {
-                Console.WriteLine(pair.ToString());
             }
             return _Finished[participant];
         }
