@@ -1,18 +1,10 @@
 ﻿using Model;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.Tracing;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.Intrinsics.Arm;
-using System.Text;
-using System.Timers;
 
 namespace Controller
 {
     public class Race
     {
-        public Track Track { get; set; }
+        public Track track { get; set; }
         public DateTime StartTime { get; set; }
 
         public List<IParticipant>? Participants { get; set; } = new List<IParticipant> { };
@@ -28,7 +20,7 @@ namespace Controller
 
         public Race(Track track, List<IParticipant>? participants)
         {
-            Track = track;
+            this.track = track;
             Participants = participants;
             RandomizeEquipment();
             //if a race is finished you want the event to be triggerd so the next track will appear
@@ -45,8 +37,8 @@ namespace Controller
         {
             MakeBroken();
             FracturedButWhole();
-            ChangeDriverPosition(Track);
-            DriverChanged?.Invoke(this, new DriverChangedEventsArgs(Track));
+            ChangeDriverPosition(track);
+            DriverChanged?.Invoke(this, new DriverChangedEventsArgs(track));
         }
         
         //get the sectionData for a section or adds data if the key was not already known
@@ -72,7 +64,6 @@ namespace Controller
         //randomly makes a car broken based on their quality
         private void MakeBroken()
         {
-            Console.SetCursorPosition(0, 0);
             foreach (var participant in Participants)
             {
                 int quality = participant.Equipment.Quality;
@@ -86,7 +77,6 @@ namespace Controller
                         participant.Equipment.IsBroken = true;
                     }
                 }
-                Console.WriteLine(participant.Name + ", " + participant.Equipment.IsBroken);
             }
         }
 
@@ -132,7 +122,7 @@ namespace Controller
         public void start()
         {
             timer.Start();
-            GiveStartPositions(Track, Participants);
+            GiveStartPositions(track, Participants);
         }
 
         //every time someone moves this is triggerd

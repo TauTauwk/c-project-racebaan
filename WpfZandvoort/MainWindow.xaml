@@ -7,6 +7,6 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid Background="#FF00BD79">
-        <Image x:Name="image" Margin="329,182,371,152"/>
+        <Image x:Name="Image" Margin="329,182,371,152"/>
     </Grid>
 </Window>

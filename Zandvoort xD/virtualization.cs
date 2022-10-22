@@ -22,7 +22,7 @@ namespace Zandvoort_xD
         //if a driver changes you want the track to be drawn over
         private static void DriverChanged(Object? sender, DriverChangedEventsArgs e)
         {
-            DrawTrack(Data.CurrentRace);
+            DrawTrack(Data.CurrentRace.track);
         }
 
         #region graphics
@@ -217,7 +217,7 @@ namespace Zandvoort_xD
         #endregion
 
         //drawing all the sections
-        private static void DrawTrack(Race race)
+        private static void DrawTrack(Track track)
         {
             int x = 25;
             int y = 24;
@@ -225,7 +225,7 @@ namespace Zandvoort_xD
             Console.SetWindowSize(49, 21);
             Console.SetCursorPosition(x,y);
 
-            foreach (Section section in race.Track.Sections) 
+            foreach (Section section in track.Sections) 
             {
                 //Console.WriteLine(race.GetSectionData(section).Left);
 

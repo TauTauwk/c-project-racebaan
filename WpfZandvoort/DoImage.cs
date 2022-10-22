@@ -11,7 +11,7 @@ using System.Windows.Media.Imaging;
 
 namespace WpfZandvoort
 {
-    public static class Image
+    public static class DoImage
     {
         private static Dictionary<string, Bitmap> _images = new();
 

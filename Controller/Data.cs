@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.PortableExecutable;
-using System.Text;
-using System.Threading.Tasks;
 using Model;
 
 namespace Controller
 {
-    static public class Data
+    public static class Data
     {
         public static Competition? Competition { get; set; }
         public static Race? CurrentRace { get; set; }
