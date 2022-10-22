@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="BlueCar.png" />
+    <None Remove="Images\BlueCar.png" />
+    <None Remove="Images\CornerRoad.png" />
+    <None Remove="Images\Failure.png" />
+    <None Remove="Images\FinishRoad.png" />
+    <None Remove="Images\GreenCar.png" />
+    <None Remove="Images\GreyCar.png" />
+    <None Remove="Images\RedCar.png" />
+    <None Remove="Images\StartRoad.png" />
+    <None Remove="Images\StraightRoad.png" />
+    <None Remove="Images\YellowCar.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Images\BlueCar.png" />
+    <Content Include="Images\CornerRoad.png" />
+    <Content Include="Images\Failure.png" />
+    <Content Include="Images\FinishRoad.png" />
+    <Content Include="Images\GreenCar.png" />
+    <Content Include="Images\GreyCar.png" />
+    <Content Include="Images\RedCar.png" />
+    <Content Include="Images\StartRoad.png" />
+    <Content Include="Images\StraightRoad.png" />
+    <Content Include="Images\YellowCar.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
+  </ItemGroup>
+
+</Project>
