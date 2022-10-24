@@ -29,12 +29,12 @@ namespace WpfZandvoort
             _images.Clear();
         }
 
-        public static Bitmap DrawBitmap(int x, int y)
+        public static Bitmap DrawBitmap(int width, int height)
         {
             string key = "empty";
             if (!_images.ContainsKey(key))
             {
-                _images.Add(key, new Bitmap(x,y));
+                _images.Add(key, new Bitmap(width,height));
                 Graphics graphics = Graphics.FromImage(_images[key]);
                 graphics.Clear(System.Drawing.Color.DarkGray);
             }

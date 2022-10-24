@@ -519,7 +519,7 @@ namespace Zandvoort_xD
         {
             Initialize(e.Race);
             Data.CurrentRace.DriverChanged += DriverChanged;
-            DrawTrack(Data.CurrentRace);
+            DrawTrack(Data.CurrentRace.track);
         }
     }
 }
