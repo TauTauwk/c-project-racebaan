@@ -10,28 +10,38 @@
   <ItemGroup>
     <None Remove="BlueCar.png" />
     <None Remove="Images\BlueCar.png" />
+    <None Remove="Images\Cars\BlueCar.png" />
+    <None Remove="Images\Cars\Failure.png" />
+    <None Remove="Images\Cars\GreenCar.png" />
+    <None Remove="Images\Cars\GreyCar.png" />
+    <None Remove="Images\Cars\RedCar.png" />
+    <None Remove="Images\Cars\YellowCar.png" />
     <None Remove="Images\CornerRoad.png" />
     <None Remove="Images\Failure.png" />
     <None Remove="Images\FinishRoad.png" />
     <None Remove="Images\GreenCar.png" />
     <None Remove="Images\GreyCar.png" />
     <None Remove="Images\RedCar.png" />
+    <None Remove="Images\Sections\CornerRoad.png" />
+    <None Remove="Images\Sections\FinishRoad.png" />
+    <None Remove="Images\Sections\StartRoad.png" />
+    <None Remove="Images\Sections\StraightRoad.png" />
     <None Remove="Images\StartRoad.png" />
     <None Remove="Images\StraightRoad.png" />
     <None Remove="Images\YellowCar.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Images\BlueCar.png" />
-    <Content Include="Images\CornerRoad.png" />
-    <Content Include="Images\Failure.png" />
-    <Content Include="Images\FinishRoad.png" />
-    <Content Include="Images\GreenCar.png" />
-    <Content Include="Images\GreyCar.png" />
-    <Content Include="Images\RedCar.png" />
-    <Content Include="Images\StartRoad.png" />
-    <Content Include="Images\StraightRoad.png" />
-    <Content Include="Images\YellowCar.png" />
+    <Content Include="Images\Cars\BlueCar.png" />
+    <Content Include="Images\Cars\Failure.png" />
+    <Content Include="Images\Cars\GreenCar.png" />
+    <Content Include="Images\Cars\GreyCar.png" />
+    <Content Include="Images\Cars\RedCar.png" />
+    <Content Include="Images\Cars\YellowCar.png" />
+    <Content Include="Images\Sections\CornerRoad.png" />
+    <Content Include="Images\Sections\FinishRoad.png" />
+    <Content Include="Images\Sections\StartRoad.png" />
+    <Content Include="Images\Sections\StraightRoad.png" />
   </ItemGroup>
 
   <ItemGroup>

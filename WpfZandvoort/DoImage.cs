@@ -8,12 +8,14 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Color = System.Drawing.Color;
+using ColorConverter = System.Windows.Media.ColorConverter;
 
 namespace WpfZandvoort
 {
     public static class DoImage
     {
-        private static Dictionary<string, Bitmap> _images = new();
+        private static Dictionary<string, Bitmap> _images = new Dictionary<string, Bitmap>();
 
         public static Bitmap GetImage(string ImageLocation)
         {
@@ -36,7 +38,7 @@ namespace WpfZandvoort
             {
                 _images.Add(key, new Bitmap(width,height));
                 Graphics graphics = Graphics.FromImage(_images[key]);
-                graphics.Clear(System.Drawing.Color.DarkGray);
+                graphics.Clear(ColorTranslator.FromHtml("#AECC48"));
             }
             return (Bitmap)_images[key].Clone();
             
