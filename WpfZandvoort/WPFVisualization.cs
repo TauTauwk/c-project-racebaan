@@ -18,16 +18,18 @@ namespace WpfZandvoort
 
         enum Directions
         {
-            North,
-            East,
-            South,
-            West
+            North = 0,
+            East = 1,
+            South = 2,
+            West = 3
         }
 
         private static Race _race;
-        private static Directions direction = Directions.East;
-        private static int imageDimentions = 300;
-        
+        private static Directions directions = Directions.East;
+        private static (int width, int height) imageDimentions = (300, 300);
+        private static int XLength = 0;
+        private static int YLength = 0;
+
         #region images
         private const string Finish = @"C:\Users\wesse\source\repos\c-project-racebaan\WpfZandvoort\Images\Sections\FinishRoad.png";
         private const string Corner = @"C:\Users\wesse\source\repos\c-project-racebaan\WpfZandvoort\Images\Sections\CornerRoad.png";
@@ -43,8 +45,86 @@ namespace WpfZandvoort
 
         public static BitmapSource DrawTrack(Track track)
         {
-            Bitmap bitmap = DoImage.DrawBitmap(300, 300);
-            return DoImage.CreateBitmapSourceFromGdiBitmap(bitmap);
+            TrackSize(track);
+            Bitmap bitmap = DoHim.DrawBitmap(XLength, YLength); //die 300 moet aangepast worden door de totale grootte van je track
+            return DoHim.CreateBitmapSourceFromGdiBitmap(bitmap);
+        }
+
+        public static void TrackSize(Track track)
+        {
+            int width = 0;
+            int height = 0;
+
+            int x = 300;
+
+            Directions direction = Directions.East;
+
+            foreach (Section section in track.Sections)
+            {
+                if (section.SectionType.ToString().Contains("Left"))
+                {
+                    switch (direction)
+                    {
+                        case Directions.North:
+                            height += x;
+                            direction = Directions.East;
+                            break;
+                        case Directions.East:
+                            width += x;
+                            direction = Directions.South;
+                            break;
+                        case Directions.South:
+                            height += x;
+                            direction = Directions.West;
+                            break;
+                        case Directions.West:
+                            width += x;
+                            direction = Directions.North;
+                            break;
+                    }
+                }
+                else if (section.SectionType.ToString().Contains("Right"))
+                {
+                    switch (direction)
+                    {
+                        case Directions.North:
+                            height += x;
+                            direction = Directions.West;
+                            break;
+                        case Directions.East:
+                            width += x;
+                            direction = Directions.North;
+                            break;
+                        case Directions.South:
+                            height += x;
+                            direction = Directions.East;
+                            break;
+                        case Directions.West:
+                            width += x;
+                            direction = Directions.South;
+                            break;
+                    }
+
+                }
+
+                if (direction == Directions.East || direction == Directions.West)
+                {
+                    if (section.SectionType == SectionTypes.StartE || section.SectionType == SectionTypes.FinishE)
+                    {
+                        width += 120;
+                    }
+                    else
+                    {
+                        width += x;
+                    }
+                }
+                if (direction == Directions.North || direction == Directions.South)
+                {
+                    height += x;
+                }
+            }
+            XLength = width;
+            YLength = height;
         }
 
         #region triedButFailed

@@ -36,7 +36,7 @@ namespace WpfZandvoort
 
         private void OnNextRace(object? sender, OnNextRaceEventArgs e)
         {
-            DoImage.ClearImageCache();
+            DoHim.ClearImageCache();
             WPFVisualization.Initialize(e.Race);
             
             e.Race.DriverChanged += DriverChanged;
@@ -59,7 +59,7 @@ namespace WpfZandvoort
 
         private void OnFinishedRace(object sender, EventArgs e)
         {
-            DoImage.ClearImageCache();
+            DoHim.ClearImageCache();
         }
     }
 }

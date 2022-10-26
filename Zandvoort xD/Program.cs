@@ -30,7 +30,6 @@ namespace Zandvoort_xD // Note: actual namespace depends on the project name.
             #endregion
             Virtualization.Initialize(CurrentRace);
 
-
             for (; ; )
             {
                 Thread.Sleep(100);

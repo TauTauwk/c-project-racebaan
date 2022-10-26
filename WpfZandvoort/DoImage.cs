@@ -13,7 +13,7 @@ using ColorConverter = System.Windows.Media.ColorConverter;
 
 namespace WpfZandvoort
 {
-    public static class DoImage
+    public static class DoHim
     {
         private static Dictionary<string, Bitmap> _images = new Dictionary<string, Bitmap>();
 
