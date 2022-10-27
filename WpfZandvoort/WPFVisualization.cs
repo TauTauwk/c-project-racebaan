@@ -25,7 +25,7 @@ namespace WpfZandvoort
 
         private static Race _race;
         private static Directions directions = Directions.East;
-        private static (int width, int height) imageDimentions = (300, 300);
+        private static int imageDimentions = 448;
         private static int XLength = 0;
         private static int YLength = 0;
 
@@ -43,121 +43,154 @@ namespace WpfZandvoort
         public static BitmapSource DrawTrack(Track track)
         {
             int x = XLength / 2;
-            int y = YLength / 2;
+            int y = 0;
             TrackSize(track);
-            Bitmap bitmap = DoImage.GetBitmap(XLength, YLength); //die 300 moet aangepast worden door de totale grootte van je track
+            Bitmap bitmap = DoImage.GetBitmap(XLength, YLength);
             Graphics g = Graphics.FromImage(bitmap);
 
             foreach (Section section in track.Sections) {
+                Bitmap BTSection = DoImage.GetImage(ImagePath(section));
                 DetermineDirection(section);
-                if (section.SectionType.ToString().Contains("Right"))
-                {
-                    bitmap.RotateFlip(RotateFlipType.RotateNoneFlipY);
-                }
+
                 switch (directions)
                 {
                     case Directions.North:
-                        bitmap.RotateFlip(RotateFlipType.Rotate270FlipNone);
-                        g.DrawImage(DoImage.GetImage(ImagePath(section)), x, y);
-                        y -= 300;
+                        if (section.SectionType.ToString().Contains("Right"))
+                        {
+                            BTSection.RotateFlip(RotateFlipType.Rotate270FlipX);
+                        }
+                        else
+                        {
+                            BTSection.RotateFlip(RotateFlipType.Rotate270FlipNone);
+                        }
+                        g.DrawImage(BTSection, x, y);
+                        y -= imageDimentions;
                         continue;
                     case Directions.East:
                         if (section.SectionType == SectionTypes.StartE || section.SectionType == SectionTypes.FinishE)
                         {
-                            g.DrawImage(DoImage.GetImage(ImagePath(section)), x, y);
-                            x += 120;
+                            g.DrawImage(BTSection, x, y);
+                            x += 180;
                             continue;
                         }
                         else
                         {
-                            g.DrawImage(DoImage.GetImage(ImagePath(section)), x, y);
-                            x += 300;
+                            if (section.SectionType.ToString().Contains("Right"))
+                            {
+                                BTSection.RotateFlip(RotateFlipType.RotateNoneFlipY);
+                            }
+                            else
+                            {
+                                BTSection.RotateFlip(RotateFlipType.RotateNoneFlipNone);
+                            }
+                            g.DrawImage(BTSection, x, y);
+                            x += imageDimentions;
                             continue;
                         }
                     case Directions.South:
-                        bitmap.RotateFlip(RotateFlipType.Rotate90FlipNone);
-                        g.DrawImage(DoImage.GetImage(ImagePath(section)), x, y);
-                        y += 300;
+                        if (section.SectionType.ToString().Contains("Right"))
+                        {
+                            BTSection.RotateFlip(RotateFlipType.Rotate90FlipX);
+                        }
+                        else
+                        {
+                            BTSection.RotateFlip(RotateFlipType.Rotate90FlipNone);
+                        }
+                        g.DrawImage(BTSection, x, y);
+                        y += imageDimentions;
                         continue;
                     case Directions.West:
-                        bitmap.RotateFlip(RotateFlipType.Rotate180FlipNone);
-                        g.DrawImage(DoImage.GetImage(ImagePath(section)), x, y);
-                        x -= 300;
+                        if (section.SectionType.ToString().Contains("Right"))
+                        {
+                            BTSection.RotateFlip(RotateFlipType.Rotate180FlipY);
+                        }
+                        else
+                        {
+                            BTSection.RotateFlip(RotateFlipType.Rotate180FlipNone);
+                        }
+                        g.DrawImage(BTSection, x, y);
+                        x -= imageDimentions;
                         continue;
                 }
-                #region DrawLeft
-                //if (section.SectionType == SectionTypes.LeftN)
-                //{
-                //    y -= 300;
-                //}
-                //if (section.SectionType == SectionTypes.LeftE)
-                //{
-                //    x += 300;
-                //}
-                //if (section.SectionType == SectionTypes.LeftS)
-                //{
-                //    y += 300;
-                //}
-                //if (section.SectionType == SectionTypes.LeftW)
-                //{
-                //    x -= 300;
-                //}
-                //#endregion
-                //#region DrawRight
-                //if (section.SectionType == SectionTypes.RightN)
-                //{
-                //    y -= 300;
-                //}
-                //if (section.SectionType == SectionTypes.RightE)
-                //{
-                //    x += 300;
-                //}
-                //if (section.SectionType == SectionTypes.RightS)
-                //{
-                //    y += 300;
-                //}
-                //if (section.SectionType == SectionTypes.RightW)
-                //{
-                //    x -= 300;
-                //}
-                //#endregion
-                //#region DrawStart
-                //if (section.SectionType == SectionTypes.StartE)
-                //{
-                //    x += 120;
-                //}
-                //#endregion
-                //#region DrawStraight
-                //if (section.SectionType == SectionTypes.StraightN)
-                //{
-                //    y -= 300;
-                //}
-                //if (section.SectionType == SectionTypes.StraightE)
-                //{
-                //    x += 300;
-                //}
-                //if (section.SectionType == SectionTypes.StraightS)
-                //{
-                //    y += 300;
-                //}
-                //if (section.SectionType == SectionTypes.StraightW)
-                //{
-                //    x -= 300;
-                //}
-                //#endregion
-                //#region DrawFinish
-                //if (section.SectionType == SectionTypes.FinishE)
-                //{
-                //    x += 120;
-                //}
-                #endregion            
+                #region bullshit
+                //    DetermineDirection(section);
+                //    if (section.SectionType.ToString().Contains("Right"))
+                //    {
+                //        bitmap.RotateFlip(RotateFlipType.RotateNoneFlipY);
+                //    }
+                //    g.DrawImage(DoImage.GetImage(ImagePath(section)), x, y);
+                //    #region DrawLeft
+                //    if (section.SectionType == SectionTypes.LeftN)
+                //    {
+                //        y -= imageDimentions;
+                //    }
+                //    if (section.SectionType == SectionTypes.LeftE)
+                //    {
+                //        x += imageDimentions;
+                //    }
+                //    if (section.SectionType == SectionTypes.LeftS)
+                //    {
+                //        y += imageDimentions;
+                //    }
+                //    if (section.SectionType == SectionTypes.LeftW)
+                //    {
+                //        x -= imageDimentions;
+                //    }
+                //    #endregion
+                //    #region DrawRight
+                //    if (section.SectionType == SectionTypes.RightN)
+                //    {
+                //        y -= imageDimentions;
+                //    }
+                //    if (section.SectionType == SectionTypes.RightE)
+                //    {
+                //        x += imageDimentions;
+                //    }
+                //    if (section.SectionType == SectionTypes.RightS)
+                //    {
+                //        y += imageDimentions;
+                //    }
+                //    if (section.SectionType == SectionTypes.RightW)
+                //    {
+                //        x -= imageDimentions;
+                //    }
+                //    #endregion
+                //    #region DrawStart
+                //    if (section.SectionType == SectionTypes.StartE)
+                //    {
+                //        x += 179;
+                //    }
+                //    #endregion
+                //    #region DrawStraight
+                //    if (section.SectionType == SectionTypes.StraightN)
+                //    {
+                //        y -= imageDimentions;
+                //    }
+                //    if (section.SectionType == SectionTypes.StraightE)
+                //    {
+                //        x += imageDimentions;
+                //    }
+                //    if (section.SectionType == SectionTypes.StraightS)
+                //    {
+                //        y += imageDimentions;
+                //    }
+                //    if (section.SectionType == SectionTypes.StraightW)
+                //    {
+                //        x -= imageDimentions;
+                //    }
+                //    #endregion
+                //    #region DrawFinish
+                //    if (section.SectionType == SectionTypes.FinishE)
+                //    {
+                //        x += 179;
+                //    }
+                #endregion
             }
 
             return DoImage.CreateBitmapSourceFromGdiBitmap(bitmap);
         }
         private static Directions DetermineDirection(Section section)
         {
-            Directions directions = Directions.East;
             switch (section.SectionType)
             {
                 case SectionTypes.LeftN:
@@ -223,7 +256,7 @@ namespace WpfZandvoort
             {
                 return Straight;
             }
-            else
+            else 
             {
                 return "ERROR: unknown section";
             }
