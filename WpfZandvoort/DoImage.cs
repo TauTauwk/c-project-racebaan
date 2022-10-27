@@ -13,7 +13,7 @@ using ColorConverter = System.Windows.Media.ColorConverter;
 
 namespace WpfZandvoort
 {
-    public static class DoHim
+    public static class DoImage
     {
         private static Dictionary<string, Bitmap> _images = new Dictionary<string, Bitmap>();
 
@@ -31,17 +31,16 @@ namespace WpfZandvoort
             _images.Clear();
         }
 
-        public static Bitmap DrawBitmap(int width, int height)
+        public static Bitmap GetBitmap(int width, int height)
         {
             string key = "empty";
             if (!_images.ContainsKey(key))
             {
                 _images.Add(key, new Bitmap(width,height));
                 Graphics graphics = Graphics.FromImage(_images[key]);
-                graphics.Clear(ColorTranslator.FromHtml("#AECC48"));
+                graphics.Clear(ColorTranslator.FromHtml("#ffd500"));
             }
             return (Bitmap)_images[key].Clone();
-            
         }
 
         //converteerd Bitmap naar BitmapSource dit moet omdat je geen Bitmap kan gebruiken in een WPFwindow

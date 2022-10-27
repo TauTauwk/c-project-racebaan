@@ -15,7 +15,6 @@ namespace WpfZandvoort
 {
     public static class WPFVisualization
     {
-
         enum Directions
         {
             North = 0,
@@ -31,25 +30,204 @@ namespace WpfZandvoort
         private static int YLength = 0;
 
         #region images
-        private const string Finish = @"C:\Users\wesse\source\repos\c-project-racebaan\WpfZandvoort\Images\Sections\FinishRoad.png";
-        private const string Corner = @"C:\Users\wesse\source\repos\c-project-racebaan\WpfZandvoort\Images\Sections\CornerRoad.png";
-        private const string Start = @"C:\Users\wesse\source\repos\c-project-racebaan\WpfZandvoort\Images\Sections\StartRoad.png";
-        private const string Straight = @"C:\Users\wesse\source\repos\c-project-racebaan\WpfZandvoort\Images\Sections\StraightRoad.png";
+        private const string Finish = @"C:\Users\wesse\source\repos\Zandvoort xD\WpfZandvoort\Images\Sections\FinishRoad.png";
+        private const string Corner = @"C:\Users\wesse\source\repos\Zandvoort xD\WpfZandvoort\Images\Sections\CornerRoad.png";
+        private const string Start = @"C:\Users\wesse\source\repos\Zandvoort xD\WpfZandvoort\Images\Sections\StartRoad.png";
+        private const string Straight = @"C:\Users\wesse\source\repos\Zandvoort xD\WpfZandvoort\Images\Sections\StraightRoad.png";
         #endregion
-
 
         public static void Initialize(Race race)
         {
             _race = race;
         }
-
         public static BitmapSource DrawTrack(Track track)
         {
+            int x = XLength / 2;
+            int y = YLength / 2;
             TrackSize(track);
-            Bitmap bitmap = DoHim.DrawBitmap(XLength, YLength); //die 300 moet aangepast worden door de totale grootte van je track
-            return DoHim.CreateBitmapSourceFromGdiBitmap(bitmap);
-        }
+            Bitmap bitmap = DoImage.GetBitmap(XLength, YLength); //die 300 moet aangepast worden door de totale grootte van je track
+            Graphics g = Graphics.FromImage(bitmap);
 
+            foreach (Section section in track.Sections) {
+                DetermineDirection(section);
+                if (section.SectionType.ToString().Contains("Right"))
+                {
+                    bitmap.RotateFlip(RotateFlipType.RotateNoneFlipY);
+                }
+                switch (directions)
+                {
+                    case Directions.North:
+                        bitmap.RotateFlip(RotateFlipType.Rotate270FlipNone);
+                        g.DrawImage(DoImage.GetImage(ImagePath(section)), x, y);
+                        y -= 300;
+                        continue;
+                    case Directions.East:
+                        if (section.SectionType == SectionTypes.StartE || section.SectionType == SectionTypes.FinishE)
+                        {
+                            g.DrawImage(DoImage.GetImage(ImagePath(section)), x, y);
+                            x += 120;
+                            continue;
+                        }
+                        else
+                        {
+                            g.DrawImage(DoImage.GetImage(ImagePath(section)), x, y);
+                            x += 300;
+                            continue;
+                        }
+                    case Directions.South:
+                        bitmap.RotateFlip(RotateFlipType.Rotate90FlipNone);
+                        g.DrawImage(DoImage.GetImage(ImagePath(section)), x, y);
+                        y += 300;
+                        continue;
+                    case Directions.West:
+                        bitmap.RotateFlip(RotateFlipType.Rotate180FlipNone);
+                        g.DrawImage(DoImage.GetImage(ImagePath(section)), x, y);
+                        x -= 300;
+                        continue;
+                }
+                #region DrawLeft
+                //if (section.SectionType == SectionTypes.LeftN)
+                //{
+                //    y -= 300;
+                //}
+                //if (section.SectionType == SectionTypes.LeftE)
+                //{
+                //    x += 300;
+                //}
+                //if (section.SectionType == SectionTypes.LeftS)
+                //{
+                //    y += 300;
+                //}
+                //if (section.SectionType == SectionTypes.LeftW)
+                //{
+                //    x -= 300;
+                //}
+                //#endregion
+                //#region DrawRight
+                //if (section.SectionType == SectionTypes.RightN)
+                //{
+                //    y -= 300;
+                //}
+                //if (section.SectionType == SectionTypes.RightE)
+                //{
+                //    x += 300;
+                //}
+                //if (section.SectionType == SectionTypes.RightS)
+                //{
+                //    y += 300;
+                //}
+                //if (section.SectionType == SectionTypes.RightW)
+                //{
+                //    x -= 300;
+                //}
+                //#endregion
+                //#region DrawStart
+                //if (section.SectionType == SectionTypes.StartE)
+                //{
+                //    x += 120;
+                //}
+                //#endregion
+                //#region DrawStraight
+                //if (section.SectionType == SectionTypes.StraightN)
+                //{
+                //    y -= 300;
+                //}
+                //if (section.SectionType == SectionTypes.StraightE)
+                //{
+                //    x += 300;
+                //}
+                //if (section.SectionType == SectionTypes.StraightS)
+                //{
+                //    y += 300;
+                //}
+                //if (section.SectionType == SectionTypes.StraightW)
+                //{
+                //    x -= 300;
+                //}
+                //#endregion
+                //#region DrawFinish
+                //if (section.SectionType == SectionTypes.FinishE)
+                //{
+                //    x += 120;
+                //}
+                #endregion            
+            }
+
+            return DoImage.CreateBitmapSourceFromGdiBitmap(bitmap);
+        }
+        private static Directions DetermineDirection(Section section)
+        {
+            Directions directions = Directions.East;
+            switch (section.SectionType)
+            {
+                case SectionTypes.LeftN:
+                    directions = Directions.North;
+                    break;
+                case SectionTypes.LeftE:
+                    directions = Directions.East;
+                    break;
+                case SectionTypes.LeftS:
+                    directions = Directions.South;
+                    break;
+                case SectionTypes.LeftW:
+                    directions = Directions.West;
+                    break;
+                case SectionTypes.RightN:
+                    directions = Directions.North;
+                    break;
+                case SectionTypes.RightE:
+                    directions = Directions.East;
+                    break;
+                case SectionTypes.RightS:
+                    directions = Directions.South;
+                    break;
+                case SectionTypes.RightW:
+                    directions = Directions.West;
+                    break;
+                case SectionTypes.StraightN:
+                    directions = Directions.North;
+                    break;
+                case SectionTypes.StraightE:
+                    directions = Directions.East;
+                    break;
+                case SectionTypes.StraightS:
+                    directions = Directions.South;
+                    break;
+                case SectionTypes.StraightW:
+                    directions = Directions.West;
+                    break;
+                case SectionTypes.FinishE:
+                    directions = Directions.East;
+                    break;
+                case SectionTypes.StartE:
+                    directions = Directions.East;
+                    break;
+            }
+            return directions;
+        }
+        public static string ImagePath(Section section)
+        {
+            if (section.SectionType.ToString().Contains("Finish"))
+            {
+                return Finish;
+            }
+            else if (section.SectionType.ToString().Contains("Left") || section.SectionType.ToString().Contains("Right"))
+            {
+                return Corner;
+            }
+            else if (section.SectionType.ToString().Contains("Start"))
+            {
+                return Start;
+            }
+            else if (section.SectionType.ToString().Contains("Straight"))
+            {
+                return Straight;
+            }
+            else
+            {
+                return "ERROR: unknown section";
+            }
+        }
         public static void TrackSize(Track track)
         {
             int width = 0;
@@ -104,7 +282,6 @@ namespace WpfZandvoort
                             direction = Directions.South;
                             break;
                     }
-
                 }
 
                 if (direction == Directions.East || direction == Directions.West)

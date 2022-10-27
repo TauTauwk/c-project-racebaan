@@ -221,7 +221,6 @@ namespace Zandvoort_xD
         {
             int x = 25;
             int y = 24;
-            int nummer = 0;
             Console.SetWindowSize(49, 21);
             Console.SetCursorPosition(x,y);
 
