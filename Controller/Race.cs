@@ -93,7 +93,10 @@ namespace Controller
                     if (chance == 1) //quality is max 10 11-10 = 1 
                     {
                         participant.Equipment.IsBroken = false;
-                        participant.Equipment.Speed -= 1; //after it is broken down speed will decrease by 1 point
+                        if (participant.Equipment.Speed > 1)
+                        {
+                            participant.Equipment.Speed -= 1; //after it is broken down speed will decrease by 1 point
+                        }
                     }
                 }
             }
@@ -275,8 +278,6 @@ namespace Controller
             DriverChanged = null;
             FinishedRace = null;
             timer.Stop();
-
-            Console.Clear();
         }
 
         //needed to check if a new race wants to start

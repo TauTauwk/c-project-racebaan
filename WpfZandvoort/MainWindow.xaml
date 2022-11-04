@@ -8,5 +8,14 @@
         Title="MainWindow" Height="450" Width="800">
     <Grid Background="#FF00BD79">
         <Image x:Name="WeirdImage" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <DockPanel LastChildFill="False">
+            <Menu Height="20" VerticalAlignment="Top" x:Name="menu" Width="100" DockPanel.Dock="Top">
+                <MenuItem Header="Menu">
+                    <MenuItem Header="RaceStats" Click="MenuItem_RaceStats_Click"/>
+                    <MenuItem Header="CompStats" Click="MenuItem_CompStats_Click"/>
+                    <MenuItem Header="Close" Click="MenuItem_Exit_Click"/>
+                </MenuItem>
+            </Menu>
+        </DockPanel>
     </Grid>
 </Window>

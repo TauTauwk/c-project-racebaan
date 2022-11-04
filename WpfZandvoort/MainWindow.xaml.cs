@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using System.Xaml.Permissions;
 using Controller;
 using Model;
 
@@ -25,6 +26,9 @@ namespace WpfZandvoort
     /// </summary>
     public partial class MainWindow : Window
     {
+        private StatisticsCompetition StatComp = new StatisticsCompetition();
+        private StatisticsRace StatRace = new StatisticsRace();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -60,6 +64,22 @@ namespace WpfZandvoort
         private void OnFinishedRace(object sender, EventArgs e)
         {
             DoImage.ClearImageCache();
+        }
+
+        private void MenuItem_Exit_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
+
+
+        private void MenuItem_CompStats_Click(object sender, RoutedEventArgs e)
+        {
+            StatComp.Show();
+        }
+
+        private void MenuItem_RaceStats_Click(object sender, RoutedEventArgs e)
+        {
+            StatRace.Show();
         }
     }
 }

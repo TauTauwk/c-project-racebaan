@@ -18,13 +18,11 @@ namespace Zandvoort_xD
             Console.Clear();
             race.DriverChanged += DriverChanged;
         }
-
         //if a driver changes you want the track to be drawn over
         private static void DriverChanged(Object? sender, DriverChangedEventsArgs e)
         {
-            DrawTrack(Data.CurrentRace.track);
+            DrawTrack(e.Track);
         }
-
         #region graphics
         #region finish
         private static string[] _finishE =
@@ -215,7 +213,6 @@ namespace Zandvoort_xD
         //    return result;
         //}
         #endregion
-
         //drawing all the sections
         private static void DrawTrack(Track track)
         {
@@ -453,7 +450,6 @@ namespace Zandvoort_xD
                 #endregion
             }
         }
-
         //place the drivers on the placeholders
         private static string DrawPlayers(string str, IParticipant? LeftPlayer, IParticipant? RightPlayer)
         {
@@ -474,7 +470,7 @@ namespace Zandvoort_xD
             {
                 if (RightPlayer.Equipment.IsBroken)
                 {
-                    str = str.Replace("L", "#");
+                    str = str.Replace("R", "#");
                 }
                 else
                 {
@@ -485,7 +481,6 @@ namespace Zandvoort_xD
 
             return str;
         }
-
         //draw the string of a section
         private static void DrawString(string s, Section section)
         {
@@ -512,7 +507,6 @@ namespace Zandvoort_xD
             }
             Console.WriteLine(str);
         }
-
         //when the event NextRace is triggerd this will be played
         public static void OnNextRace(object? sender, OnNextRaceEventArgs e)
         {
