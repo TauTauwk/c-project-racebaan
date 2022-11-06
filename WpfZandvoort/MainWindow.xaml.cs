@@ -46,7 +46,7 @@ namespace WpfZandvoort
             e.Race.DriverChanged += DriverChanged;
             e.Race.FinishedRace += OnFinishedRace;
 
-            Dispatcher.Invoke(() => { e.Race.DriverChanged += DriverChanged; });
+            Dispatcher.Invoke(() => { e.Race.DriverChanged += ((DataContextMainWindow)DataContext).OnDriverChanged; });
         }
 
         private void DriverChanged(object? sender, DriverChangedEventsArgs e)

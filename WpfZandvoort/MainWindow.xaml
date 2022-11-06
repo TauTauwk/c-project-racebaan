@@ -6,6 +6,9 @@
         xmlns:local="clr-namespace:WpfZandvoort"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+    <Window.DataContext>
+        <local:DataContextMainWindow/>
+    </Window.DataContext>
     <Grid Background="#FF00BD79">
         <Image x:Name="WeirdImage" VerticalAlignment="Center" HorizontalAlignment="Center"/>
         <DockPanel LastChildFill="False">
@@ -16,6 +19,7 @@
                     <MenuItem Header="Close" Click="MenuItem_Exit_Click"/>
                 </MenuItem>
             </Menu>
+            <Label x:Name="label" Content="{Binding TrackName}"/>
         </DockPanel>
     </Grid>
 </Window>

@@ -8,7 +8,7 @@ namespace Model
 {
     public class DriverChangedEventsArgs : EventArgs
     {
-        public Track? Track { get; set; }
+        public readonly Track Track;
 
         public DriverChangedEventsArgs(Track track)
         {
