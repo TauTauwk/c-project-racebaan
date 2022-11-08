@@ -26,8 +26,8 @@ namespace WpfZandvoort
     /// </summary>
     public partial class MainWindow : Window
     {
-        private StatisticsCompetition StatComp = new StatisticsCompetition();
-        private StatisticsRace StatRace = new StatisticsRace();
+        private StatisticsCompetition StatComp;
+        private StatisticsRace StatRace;
 
         public MainWindow()
         {
@@ -71,14 +71,22 @@ namespace WpfZandvoort
             Application.Current.Shutdown();
         }
 
-
         private void MenuItem_CompStats_Click(object sender, RoutedEventArgs e)
         {
+            StatComp = new StatisticsCompetition();
+            Data.NextRaceEvent += ((DataContextCompStats)StatComp.DataContext).OnNextRace;
+            ((DataContextCompStats)StatComp.DataContext).OnNextRace(null, new OnNextRaceEventArgs(Data.CurrentRace));
+
             StatComp.Show();
         }
 
         private void MenuItem_RaceStats_Click(object sender, RoutedEventArgs e)
         {
+            StatRace = new StatisticsRace();
+            Data.NextRaceEvent += ((DataContextRaceStats)StatRace.DataContext).OnNextRace;
+            ((DataContextRaceStats)StatRace.DataContext).OnNextRace(null, new OnNextRaceEventArgs(Data.CurrentRace));
+            Data.CurrentRace.DriverChanged += ((DataContextRaceStats)StatRace.DataContext).OnDriverChanged;
+
             StatRace.Show();
         }
     }

@@ -20,12 +20,7 @@ namespace Controller
             Competition.Participants = new List<IParticipant>();
             Competition.Tracks = new Queue<Track>();
 
-            AddParticipant();
-            AddParticipant();
-            AddParticipant();
-            AddParticipant();
-            AddParticipant();
-            AddParticipant();
+            AddParticipants();
 
             AddTrack();
             AddTrack();
@@ -33,14 +28,25 @@ namespace Controller
 
         //add a participant
         //call per participant
-        private static void AddParticipant()
+        private static void AddParticipants()
         {
-            num++;
             int teamColor = (num % 5);
 
-            Car car = new Car(10, 10, 10, false);
-            Driver driver = new Driver("driver" + num, 0, car, (TeamColors)teamColor);
-            Competition?.Participants?.Add(driver);
+            Competition?.Participants?.Add(new Driver("Chadwick Moore", 0, new Car(10, 10, 10, false), (TeamColors)(num % 5)));
+            num++;
+            Competition?.Participants?.Add(new Driver("Andrew Sowards", 0, new Car(10, 10, 10, false), (TeamColors)(num % 5)));
+            num++;
+            Competition?.Participants?.Add(new Driver("Ronnie Peter", 0, new Car(10, 10, 10, false), (TeamColors)(num % 5)));
+            num++;
+            Competition?.Participants?.Add(new Driver("Franklin Smith", 0, new Car(10, 10, 10, false), (TeamColors)(num % 5)));
+            num++;
+            Competition?.Participants?.Add(new Driver("Jozua Putnam", 0, new Car(10, 10, 10, false), (TeamColors)(num % 5)));
+            num++;
+            Competition?.Participants?.Add(new Driver("Jerold Samson", 0, new Car(10, 10, 10, false), (TeamColors)(num % 5)));
+            num++;
+            Competition?.Participants?.Add(new Driver("Raynard Blakeley", 0, new Car(10, 10, 10, false), (TeamColors)(num % 5)));
+            num++;
+            Competition?.Participants?.Add(new Driver("Gerard Meeuwis", 0, new Car(10, 10, 10, false), (TeamColors)(num % 5)));
         }
 
         //adds a track to the queue
@@ -95,9 +101,9 @@ namespace Controller
             if (track != null)
             {
                 CurrentRace = new Race(track, Competition?.Participants);
-                NextRaceEvent?.Invoke(null, new OnNextRaceEventArgs(CurrentRace));
-                CurrentRace.start();
+                CurrentRace.Start();
             }
+            NextRaceEvent?.Invoke(null, new OnNextRaceEventArgs(CurrentRace));
         }
     }
 }

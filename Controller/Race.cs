@@ -18,6 +18,8 @@ namespace Controller
         private Dictionary<Section, SectionData> _positions = new Dictionary<Section, SectionData>();
         private Dictionary<IParticipant, int> _Finished = new Dictionary<IParticipant, int>();
 
+        public Dictionary<IParticipant, int> _FinishedProp { get { return _Finished; } }
+
         public Race(Track track, List<IParticipant>? participants)
         {
             this.track = track;
@@ -25,7 +27,7 @@ namespace Controller
             RandomizeEquipment();
             //if a race is finished you want the event to be triggerd so the next track will appear
             FinishedRace += OnNextRace;
-            
+
             //lets something happen every half a second
             timer = new System.Timers.Timer();
             timer.Interval = 500;
@@ -93,7 +95,7 @@ namespace Controller
                     if (chance == 1) //quality is max 10 11-10 = 1 
                     {
                         participant.Equipment.IsBroken = false;
-                        if (participant.Equipment.Speed > 1)
+                        if (participant.Equipment.Speed > 5) //only if the speed is greater than 5 otherwise they will be too slow
                         {
                             participant.Equipment.Speed -= 1; //after it is broken down speed will decrease by 1 point
                         }
@@ -122,7 +124,7 @@ namespace Controller
         }
 
         //starts the timer and will call to tell that drivers need a start position
-        public void start()
+        public void Start()
         {
             timer.Start();
             GiveStartPositions(track, Participants);
@@ -196,14 +198,12 @@ namespace Controller
                         if (sdP.Left != null && sdP.DistanceLeft >= 100 && !sdP.Left.Equipment.IsBroken)
                         {
                             sdC.Left = sdP.Left;
-                            sdC.DistanceLeft = sdP.DistanceLeft - 100;
                             sdP.Left = null;
                             sdP.DistanceLeft = 0;
                         }
                         else if (sdP.Right != null && sdP.DistanceRight >= 100 && !sdP.Right.Equipment.IsBroken)
                         {
                             sdC.Left = sdP.Right;
-                            sdC.DistanceLeft = sdP.DistanceRight - 100;
                             sdP.Right = null;
                             sdP.DistanceRight = 0;
                         }
@@ -237,6 +237,10 @@ namespace Controller
                 //check if all the drivers have done their laps
                 if (_Finished.Where(x => x.Value >= 2).Count() == Participants.Count())
                 {
+                    for (int j = 0; j < _Finished.Count(); j++)
+                    {
+                        _Finished.ElementAt(j).Key.Points += _Finished.Count() - j;
+                    }
                     FinishedRace?.Invoke(this, EventArgs.Empty);
                     CleanUp();
                     break;
@@ -254,7 +258,8 @@ namespace Controller
             }
             else if(_Finished.ContainsKey(participant))
             {
-                _Finished[participant] += 1;
+                _Finished.Remove(participant);
+                _Finished.Add(participant, 2);
             }
             return _Finished[participant];
         }

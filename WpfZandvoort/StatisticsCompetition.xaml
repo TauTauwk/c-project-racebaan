@@ -5,8 +5,31 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfZandvoort"
         mc:Ignorable="d"
-        Title="StatisticsCompetition" Height="450" Width="800">
-    <Grid>
-        
+        Title="StatisticsCompetition" Height="450" Width="464">
+    <Window.DataContext>
+        <local:DataContextCompStats/>
+    </Window.DataContext>
+    <Grid Name="CompetitionView">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Label Grid.Row="0">Competition</Label>
+            <ListView Grid.Row="1" ItemsSource="{Binding Participants}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"/>
+                        <GridViewColumn Header="TeamColor" DisplayMemberBinding="{Binding TeamColor}"/>
+                        <GridViewColumn Header="Points" DisplayMemberBinding="{Binding Points}"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </Grid>
     </Grid>
 </Window>
