@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ControllerTest
 {
-    public class Controller_Race_MakeBrokenShould
+    public class Controller_Race_FunctionsInRaceShould
     {
         Race race;
         List<IParticipant> participants;
