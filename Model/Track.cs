@@ -11,7 +11,7 @@
             ConvArrayToLinkedList(sections);
         }
 
-        private LinkedList<Section> ConvArrayToLinkedList(SectionTypes[] sectionTypes)
+        public LinkedList<Section> ConvArrayToLinkedList(SectionTypes[] sectionTypes)
         {
             Sections = new LinkedList<Section>();
             foreach (SectionTypes sectionType in sectionTypes)

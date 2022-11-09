@@ -15,21 +15,18 @@ namespace ControllerTest
         [SetUp]
         public void SetUp()
         {
-            Competition _competition = new Competition();
+            _competition = new Competition();
         }
 
         [Test]
         public void NextTrack_EmptyQueue_ReturnNull()
         {
-            Competition _competition = new Competition();
-            var result = _competition.NextTrack();
-            Assert.IsNull(result);
+            Assert.IsNull(_competition.NextTrack());
         }
 
         [Test]
         public void NextTrack_OneInQueue_ReturnTrack()
         {
-            Competition _competition = new Competition();
 
             var ln = SectionTypes.LeftN;
             var le = SectionTypes.LeftE;
@@ -56,7 +53,6 @@ namespace ControllerTest
         [Test]
         public void NextTrack_OneInQueue_RemoveTrackFromQueue()
         {
-            Competition _competition = new Competition();
 
             var ln = SectionTypes.LeftN;
             var le = SectionTypes.LeftE;
@@ -84,7 +80,6 @@ namespace ControllerTest
         [Test]
         public void NextTrack_TwoInQueue_ReturnNextTrack()
         {
-            Competition _competition = new Competition();
 
             var ln = SectionTypes.LeftN;
             var le = SectionTypes.LeftE;
