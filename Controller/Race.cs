@@ -64,7 +64,7 @@ namespace Controller
         }
         
         //randomly makes a car broken based on their quality
-        private void MakeBroken()
+        public void MakeBroken()
         {
             foreach (var participant in Participants)
             {
@@ -82,7 +82,7 @@ namespace Controller
             }
         }
 
-        private void FracturedButWhole()
+        public void FracturedButWhole()
         {
             foreach (var participant in Participants)
             {
@@ -105,7 +105,7 @@ namespace Controller
         }
 
         //all drivers need a start position on the grid
-        private void GiveStartPositions(Track track, List<IParticipant>? participants)
+        public void GiveStartPositions(Track track, List<IParticipant>? participants)
         {
             int nummer = 0;
             foreach (Section s in track.Sections)
@@ -131,7 +131,7 @@ namespace Controller
         }
 
         //every time someone moves this is triggerd
-        private void ChangeDriverPosition(Track track)
+        public void ChangeDriverPosition(Track track)
         {
             int i = 0;
             while (i < track.Sections.Count()+1)
@@ -250,7 +250,7 @@ namespace Controller
         }
 
         //function counts the amount of laps a driver has ridden in a dictionary
-        private int AmountOfLaps(IParticipant participant)
+        public int AmountOfLaps(IParticipant participant)
         {
             if (!_Finished.ContainsKey(participant))
             {
@@ -265,7 +265,7 @@ namespace Controller
         }
 
         //chack if a driver has finished
-        private bool IsFinished(IParticipant participant)
+        public bool IsFinished(IParticipant participant)
         {
             if (AmountOfLaps(participant) == 2)
             {

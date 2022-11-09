@@ -28,7 +28,7 @@ namespace Controller
 
         //add a participant
         //call per participant
-        private static void AddParticipants()
+        public static void AddParticipants()
         {
             int teamColor = (num % 5);
 
