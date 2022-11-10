@@ -135,5 +135,30 @@ namespace ControllerTest
             race.ChangeDriverPosition(track);
             Assert.IsFalse(race.IsFinished(participants[0]));
         }
+
+        [Test]
+        public void GetFinishedProp()
+        {
+            race.GiveStartPositions(track, participants);
+            while (race.AmountOfLaps(participants[0]) != 2)
+            {
+                race.ChangeDriverPosition(track);
+            }
+            Assert.AreEqual(race._Finished, race._FinishedProp);
+        }
+
+        [Test]
+        public void GetStartTime()
+        {
+            Assert.IsTrue(race.StartTime is DateTime);
+        }
+
+        [Test]
+        public void SetStartTime()
+        {
+            DateTime expected = DateTime.Now;
+            race.StartTime = DateTime.Now;
+            Assert.AreEqual(expected.Year, race.StartTime.Year);
+        }
     }
 }

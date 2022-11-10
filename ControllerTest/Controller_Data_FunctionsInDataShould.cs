@@ -36,6 +36,12 @@ namespace ControllerTest
         }
 
         [Test]
+        public void AddParticipants_ChadwickMoore()
+        {
+            Assert.AreEqual("Chadwick Moore", Data.Competition.Participants[0].Name);
+        }
+
+        [Test]
         public void Addtrack_AddsTracks()
         {
             Assert.AreEqual(2, Data.Competition.Tracks.Count());

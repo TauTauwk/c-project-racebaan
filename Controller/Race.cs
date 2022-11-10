@@ -16,7 +16,7 @@ namespace Controller
 
         private Random _random = new Random(DateTime.Now.Millisecond);
         private Dictionary<Section, SectionData> _positions = new Dictionary<Section, SectionData>();
-        private Dictionary<IParticipant, int> _Finished = new Dictionary<IParticipant, int>();
+        public Dictionary<IParticipant, int> _Finished = new Dictionary<IParticipant, int>();
 
         public Dictionary<IParticipant, int> _FinishedProp { get { return _Finished; } }
 

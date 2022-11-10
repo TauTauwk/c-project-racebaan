@@ -9,16 +9,16 @@ namespace ModelTest
 {
     public class Model_Car_CreatesACar
     {
+        Car car;
         [SetUp]
         public void Setup()
         {
+            car = new Car(100, 100, 100, false);
         }
 
         [Test]
         public void CarCreated()
         {
-            Car car = new Car(100, 100, 100, false);
-
             Assert.IsTrue(car is Car);
         }
 

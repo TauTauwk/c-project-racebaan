@@ -147,74 +147,8 @@ namespace Zandvoort_xD
         };
         #endregion
         #endregion
-        #region proberenMetAlgoritmeIetsTeDoen
-        //private static string[] mirrorHorizontal(string[] _section)
-        //{
-        //    string[] result = new string[4];
-        //    result[0] = _section[4];
-        //    result[1] = _section[3];
-        //    result[2] = _section[2];
-        //    result[3] = _section[1];
-        //    result[4] = _section[0];
-        //    return result;
-        //}
-
-        //private static string[] TurnClockwise(string[] _section)
-        //{
-        //    _section.Reverse();
-        //    char[] sectionDetails = new char[4];
-        //    char[] tussenResult = new char[4];
-        //    string[] result = new string[4];
-        //    for (int row = 0; row < 4; row++)
-        //    {
-        //        int num = 0;
-        //        foreach (string s in _section)
-        //        {
-        //            sectionDetails = s.ToCharArray();
-        //            tussenResult[row] = sectionDetails[num];
-        //            num++;
-        //        }
-        //        string charStr = new string(tussenResult);
-        //        result[num] = charStr;
-        //    }
-        //    return result;
-        //}
-
-        //static string[] RotateString(string[] matrix, int n)
-        //{
-        //    string[] start = matrix;
-        //    string[] result = new string[n];
-        //    char[][] sectionDetails = new char[n][];
-
-        //    for (int i = 0; i < n; i++)
-        //    {
-        //        foreach (string s in matrix)
-        //        {
-        //            sectionDetails[i] = s.ToCharArray();
-        //        }
-        //    }
-
-        //    char[][] ret = new char[n][];
-
-        //    for (int i = 0; i < n; ++i)
-        //    {
-        //        ret[i] = new char[n];
-
-        //        for (int j = 0; j < n; ++j)
-        //        {
-        //            ret[i][j] = sectionDetails[n - j - 1][i];
-        //        }
-        //    }
-
-        //    for (int i = 0; i < n; i++)
-        //    {
-        //        result[i] = new string(ret[i]);
-        //    }
-        //    return result;
-        //}
-        #endregion
         //drawing all the sections
-        private static void DrawTrack(Track track)
+        public static void DrawTrack(Track track)
         {
             int x = 25;
             int y = 24;
@@ -328,34 +262,7 @@ namespace Zandvoort_xD
                         DrawString(s, section);
                         Console.SetCursorPosition(x, y);
                     }
-                    //foreach (string s in _StartE)
-                    //{
-                    //    string str = s;
-                    //    y++;
-                    //    if ((s.Contains("R") || s.Contains("L")) && nummer < Data.CurrentRace?.Participants?.Count())
-                    //    {
-                    //        IParticipant Left;
-                    //        IParticipant Right;
 
-                    //        SecD = race.GetSectionData(section);
-                    //        SecD.Left = race.Participants[nummer];
-                    //        SecD.Right = race.Participants[nummer++];
-
-                    //        Left = SecD.Left;
-                    //        Right = SecD.Right;
-
-                    //        //Left = Data.CurrentRace.Participants[nummer];
-                    //        //Right = Data.CurrentRace.Participants[nummer];
-                    //        str = DrawPlayers(s, Left, Right);
-                    //    }
-                    //    Console.WriteLine(str);
-                    //    Console.SetCursorPosition(x, y);
-                    //    //y++;
-                    //    //drawString(s, section);
-                    //    //Console.SetCursorPosition(x, y);
-
-
-                    //}
                     x += 2;
                     y -= 5;
                     Console.SetCursorPosition(x, y);
@@ -422,36 +329,10 @@ namespace Zandvoort_xD
                     Console.SetCursorPosition(x, y);
                 }
                 #endregion
-                #region foute boel
-                //string[] kindOfSection = new string[4];
-                //for (int i = 0; i < bochtL % 4; i++)
-                //{
-                //    kindOfSection = RotateString(_LeftHorizontal, 4);
-                //    if (bochtL % 4 == 0)
-                //    {
-
-                //    }
-                //    else if (bochtL % 4 == 1)
-                //    {
-
-                //    }
-                //    else if (bochtL % 4 == 2)
-                //    {
-
-                //    }
-                //}
-
-                //foreach (string s in kindOfSection)
-                //{
-                //    Console.SetCursorPosition(x, y);
-                //    Console.WriteLine(s);
-                //}
-                //bochtL++;
-                #endregion
             }
         }
         //place the drivers on the placeholders
-        private static string DrawPlayers(string str, IParticipant? LeftPlayer, IParticipant? RightPlayer)
+        public static string DrawPlayers(string str, IParticipant? LeftPlayer, IParticipant? RightPlayer)
         {
             if (LeftPlayer != null)
             {
@@ -513,6 +394,56 @@ namespace Zandvoort_xD
             Initialize(e.Race);
             Data.CurrentRace.DriverChanged += DriverChanged;
             DrawTrack(Data.CurrentRace.track);
+        }
+        public static string GetGraphics(SectionTypes section)
+        {
+            switch (section)
+            {
+                case SectionTypes.LeftN:
+                    return _LeftN.ToString();
+                    break;
+                case SectionTypes.LeftE:
+                    return _LeftE.ToString();
+                    break;
+                case SectionTypes.LeftS:
+                    return _LeftS.ToString();
+                    break;
+                case SectionTypes.LeftW:
+                    return _LeftW.ToString();
+                    break;
+                case SectionTypes.RightN:
+                    return _RightN.ToString();
+                    break;
+                case SectionTypes.RightE:
+                    return _RightE.ToString();
+                    break;
+                case SectionTypes.RightS:
+                    return _RightS.ToString();
+                    break;
+                case SectionTypes.RightW:
+                    return _RightW.ToString();
+                    break;
+                case SectionTypes.StraightN:
+                    return _StraightN.ToString();
+                    break;
+                case SectionTypes.StraightE:
+                    return _StraightE.ToString();
+                    break;
+                case SectionTypes.StraightS:
+                    return _StraightS.ToString();
+                    break;
+                case SectionTypes.StraightW:
+                    return _StraightW.ToString();
+                    break;
+                case SectionTypes.StartE:
+                    return _StartE.ToString();
+                    break;
+                case SectionTypes.FinishE:
+                    return _finishE.ToString();
+                    break;
+                default:
+                    return null;
+            }
         }
     }
 }
