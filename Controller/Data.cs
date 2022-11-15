@@ -13,6 +13,7 @@ namespace Controller
 
         private static int num =  0;
         private static int trackNum = 0;
+        private const int VerschillendeTracks = 2;
 
         public static void Initialize()
         {
@@ -53,40 +54,62 @@ namespace Controller
         private static void AddTrack()
         {
             trackNum++;
-            trackNum = trackNum % 2;
+            trackNum = trackNum % VerschillendeTracks;
 
-            var ln = SectionTypes.LeftN;
-            var le = SectionTypes.LeftE;
-            var ls = SectionTypes.LeftS;
-            var lw = SectionTypes.LeftW;
-            var rn = SectionTypes.RightN;
-            var re = SectionTypes.RightE;
-            var rs = SectionTypes.RightS;
-            var rw = SectionTypes.RightW;
-            var Se = SectionTypes.StartE;
-            var sn = SectionTypes.StraightN;
-            var se = SectionTypes.StraightE;
-            var sw = SectionTypes.StraightW;
-            var Fe = SectionTypes.FinishE;
-
-            if (trackNum == 0)
+            if (trackNum == 1)
             {
-                SectionTypes[] track1 = new SectionTypes[]
-                {
-                    Se, Se, Se, Se, ln, lw, sw, sw, ls, le ,Fe
-                };
-                Track a = new Track("Nederland", track1);
+                Track a = new Track("Nederland", Track1());
                 Competition?.Tracks?.Enqueue(a);
             }
             else 
             {
-                SectionTypes[] track2 = new SectionTypes[]
-                {
-                    Se, Se, Se, Se, rs, le, rs, rw, sw, sw, ls, rw, rn, sn, lw, rn, re, se, Fe
-                };
-                Track a = new Track("België", track2);
+                Track a = new Track("België", Track2());
                 Competition?.Tracks?.Enqueue(a);
             }
+        }
+
+        private static SectionTypes[] Track1()
+        {
+            SectionTypes[] track = new SectionTypes[] {
+                SectionTypes.StartE,
+                SectionTypes.StartE,
+                SectionTypes.StartE,
+                SectionTypes.StartE,
+                SectionTypes.LeftN,
+                SectionTypes.LeftW,
+                SectionTypes.StraightW,
+                SectionTypes.StraightW,
+                SectionTypes.LeftS,
+                SectionTypes.LeftE,
+                SectionTypes.FinishE
+            };
+            return track;
+        }
+
+        private static SectionTypes[] Track2()
+        {
+            SectionTypes[] track = new SectionTypes[] {
+                SectionTypes.StartE,
+                SectionTypes.StartE,
+                SectionTypes.StartE,
+                SectionTypes.StartE,
+                SectionTypes.RightS,
+                SectionTypes.LeftE,
+                SectionTypes.RightS,
+                SectionTypes.RightW,
+                SectionTypes.StraightW,
+                SectionTypes.StraightW,
+                SectionTypes.LeftS,
+                SectionTypes.RightW,
+                SectionTypes.RightN,
+                SectionTypes.StraightN,
+                SectionTypes.LeftW,
+                SectionTypes.RightN,
+                SectionTypes.RightE,
+                SectionTypes.StraightE,
+                SectionTypes.FinishE
+            };
+            return track;
         }
 
         //gets the next race from the competition

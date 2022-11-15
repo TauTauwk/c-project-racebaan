@@ -24,7 +24,6 @@ namespace WpfZandvoort
             Participants = _race.Participants;
 
             Dictionary<IParticipant, int> Finished = _race._FinishedProp;
-
             Dictionary<IParticipant, int> lap = new Dictionary<IParticipant, int>();
             Dictionary<IParticipant, string> finished = new Dictionary<IParticipant, string>();
             foreach (var participant in Participants)
@@ -57,6 +56,7 @@ namespace WpfZandvoort
             Participants = new List<IParticipant>();
             _lap = new Dictionary<IParticipant, int>();
             _finished = new Dictionary<IParticipant, string>();
+
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(""));
         }
     }

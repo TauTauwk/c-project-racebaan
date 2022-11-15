@@ -157,8 +157,6 @@ namespace Zandvoort_xD
 
             foreach (Section section in track.Sections) 
             {
-                //Console.WriteLine(race.GetSectionData(section).Left);
-
                 #region drawLeft
                 if (section.SectionType == SectionTypes.LeftN)
                 {
@@ -331,7 +329,7 @@ namespace Zandvoort_xD
                 #endregion
             }
         }
-        //place the drivers on the placeholders
+        //place the drivers on the placeholders and return the string
         public static string DrawPlayers(string str, IParticipant? LeftPlayer, IParticipant? RightPlayer)
         {
             if (LeftPlayer != null)
@@ -346,6 +344,10 @@ namespace Zandvoort_xD
                     str = str.Replace("L", LeftDriverNumber.ToString());
                 }
             }
+            else
+            {
+                str = str.Replace("L", " ");
+            }
 
             if (RightPlayer != null)
             {
@@ -358,6 +360,10 @@ namespace Zandvoort_xD
                     char RightDriverNumber = RightPlayer.Name[RightPlayer.Name.Length - 1];
                     str = str.Replace("R", RightDriverNumber.ToString());
                 }
+            }
+            else
+            {
+                str = str.Replace("R", " ");
             }
 
             return str;
@@ -377,14 +383,10 @@ namespace Zandvoort_xD
                 Right = SecD.Right;
 
                 //check if that section has any players on it
-                if (Right != null)
-                {
+
                     str = DrawPlayers(s, Left, Right);
-                }
-                if (Left != null)
-                {
-                    str = DrawPlayers(s, Left, Right);
-                }
+
+
             }
             Console.WriteLine(str);
         }

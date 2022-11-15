@@ -6,8 +6,8 @@ namespace Controller
     {
         public Track track { get; set; }
         public DateTime StartTime { get; set; }
-
         public List<IParticipant>? Participants { get; set; } = new List<IParticipant> { };
+        public Dictionary<IParticipant, int> _FinishedProp { get { return _Finished; } }
 
         public event EventHandler<DriverChangedEventsArgs> DriverChanged;
         public event EventHandler<EventArgs> FinishedRace;
@@ -16,9 +16,10 @@ namespace Controller
 
         private Random _random = new Random(DateTime.Now.Millisecond);
         private Dictionary<Section, SectionData> _positions = new Dictionary<Section, SectionData>();
-        public Dictionary<IParticipant, int> _Finished = new Dictionary<IParticipant, int>();
+        public Dictionary<IParticipant, int> _Finished { get; set; } =  new Dictionary<IParticipant, int>();
 
-        public Dictionary<IParticipant, int> _FinishedProp { get { return _Finished; } }
+        private const int RandomQualityFactor = 100;
+
 
         public Race(Track track, List<IParticipant>? participants)
         {
@@ -69,7 +70,7 @@ namespace Controller
             foreach (var participant in Participants)
             {
                 int quality = participant.Equipment.Quality;
-                int formula = 100 - (quality * 10); //quality 10 never breaks
+                int formula = RandomQualityFactor - (quality * 10); //quality 10 never breaks
                 if (formula != 0)
                 {
                     int chance = _random.Next(1, (formula + 1)); //the number from the formula included
@@ -95,7 +96,7 @@ namespace Controller
                     if (chance == 1) //quality is max 10 11-10 = 1 
                     {
                         participant.Equipment.IsBroken = false;
-                        if (participant.Equipment.Speed > 5) //only if the speed is greater than 5 otherwise they will be too slow
+                        if (participant.Equipment.Speed > 7) //only if the speed is greater than 5 otherwise they will be too slow
                         {
                             participant.Equipment.Speed -= 1; //after it is broken down speed will decrease by 1 point
                         }
@@ -138,98 +139,49 @@ namespace Controller
             {
                 if (i < track.Sections.Count())
                 {
-                    SectionData sdP;
-                    SectionData sdC;
+                    SectionData SectionPrevious;
+                    SectionData SectionCurrent;
+
                     //check if a driver is at the firt section than the previous will be the last section
                     if (track.Sections.ElementAt(i) == track.Sections.First())
                     {
-                        sdP = GetSectionData(track.Sections.Last());
-                        sdC = GetSectionData(track.Sections.ElementAt(i));
+                        SectionPrevious = GetSectionData(track.Sections.Last());
+                        SectionCurrent = GetSectionData(track.Sections.ElementAt(i));
                     }
                     else
                     {
                         //chack if the sdP (previous section) is equal to the last than the sdC will be the First
                         if (track.Sections.ElementAt(i-1) == track.Sections.Last())
                         {
-                            sdC = GetSectionData(track.Sections.First());
-                            sdP = GetSectionData(track.Sections.Last());
+                            SectionCurrent = GetSectionData(track.Sections.First());
+                            SectionPrevious = GetSectionData(track.Sections.Last());
                             i = 0;
                         }
                         //default
                         else
                         {
-                            sdP = GetSectionData(track.Sections.ElementAt(i - 1));
-                            sdC = GetSectionData(track.Sections.ElementAt(i));
+                            SectionPrevious = GetSectionData(track.Sections.ElementAt(i - 1));
+                            SectionCurrent = GetSectionData(track.Sections.ElementAt(i));
                         }
                     }
-                    //if sdC.Right is empty you want a driver to be able to go there
-                    if (sdC.Right == null)
-                    {
-                        //but only if he has driven more than 100 meters
-                        //comming from the previous section's right
-                        if (sdP.Right != null && sdP.DistanceRight >= 100 && !sdP.Right.Equipment.IsBroken)
-                        {
-                            sdC.Right = sdP.Right;
-                            sdC.DistanceRight = sdP.DistanceRight - 100;
-                            sdP.Right = null;
-                            sdP.DistanceRight = 0;
-                        }
-                        //he can also come from the previous section's left
-                        else if (sdP.Left != null && sdP.DistanceLeft >= 100 && !sdP.Left.Equipment.IsBroken)
-                        {
-                            sdC.Right = sdP.Left;
-                            sdC.DistanceRight = sdP.DistanceLeft - 100;
-                            sdP.Left = null;
-                            sdP.DistanceLeft = 0;
-                        }
-                    }
-                    //is the section not free, keep driving on this section
-                    else if (sdC.Right != null && !sdC.Right.Equipment.IsBroken)
-                    {
-                        int performanceR = sdC.Right.Equipment.Performance;
-                        int speedR = sdC.Right.Equipment.Speed;
-                        int actualSpeedR = speedR * performanceR;
 
-                        sdC.DistanceRight += actualSpeedR;
-                    }
-                    //same goes for the left
-                    if (sdC.Left == null)
-                    {
-                        if (sdP.Left != null && sdP.DistanceLeft >= 100 && !sdP.Left.Equipment.IsBroken)
-                        {
-                            sdC.Left = sdP.Left;
-                            sdP.Left = null;
-                            sdP.DistanceLeft = 0;
-                        }
-                        else if (sdP.Right != null && sdP.DistanceRight >= 100 && !sdP.Right.Equipment.IsBroken)
-                        {
-                            sdC.Left = sdP.Right;
-                            sdP.Right = null;
-                            sdP.DistanceRight = 0;
-                        }
-                    }
-                    else if (sdC.Left != null && !sdC.Left.Equipment.IsBroken)
-                    {
-                        int performanceL = sdC.Left.Equipment.Performance;
-                        int speedL = sdC.Left.Equipment.Speed;
-                        int actualSpeedL = speedL * performanceL;
-                        sdC.DistanceLeft += actualSpeedL;
-                    }
+                    MoveParticipant(SectionCurrent, SectionPrevious);
+
                     //check if a driver can pass the finish
-                    if (track.Sections.Last() == track.Sections.ElementAt(i) && sdC.Left != null && sdC.DistanceLeft >= 100)
+                    if (track.Sections.Last() == track.Sections.ElementAt(i) && SectionCurrent.Left != null && SectionCurrent.DistanceLeft >= 100)
                     {
-                        if (IsFinished(sdC.Left))
+                        if (IsFinished(SectionCurrent.Left))
                         {
-                            sdC.Left = null;
-                            sdC.DistanceLeft = 0;
+                            SectionCurrent.Left = null;
+                            SectionCurrent.DistanceLeft = 0;
                         }
                     }
-                    if (track.Sections.Last() == track.Sections.ElementAt(i) && sdC.Right != null && sdC.DistanceRight >= 100)
+                    if (track.Sections.Last() == track.Sections.ElementAt(i) && SectionCurrent.Right != null && SectionCurrent.DistanceRight >= 100)
                     {
-                        if (IsFinished(sdC.Right))
+                        if (IsFinished(SectionCurrent.Right))
                         {
-                            sdC.Right = null;
-                            sdC.DistanceRight = 0;
+                            SectionCurrent.Right = null;
+                            SectionCurrent.DistanceRight = 0;
                         }
                     }
                 }
@@ -246,6 +198,73 @@ namespace Controller
                     break;
                 }
                 i++;
+            }
+        }
+
+        private void MoveParticipant(SectionData SectionCurrent, SectionData SectionPrevious)
+        {
+            MoveRightParticipant(SectionCurrent, SectionPrevious);
+            MoveLeftParticipant(SectionCurrent, SectionPrevious);
+        }
+
+        private void MoveLeftParticipant(SectionData SectionCurrent, SectionData SectionPrevious)
+        {
+            //same goes for the left
+            if (SectionCurrent.Left == null)
+            {
+                if (SectionPrevious.Left != null && SectionPrevious.DistanceLeft >= 100 && !SectionPrevious.Left.Equipment.IsBroken)
+                {
+                    SectionCurrent.Left = SectionPrevious.Left;
+                    SectionPrevious.Left = null;
+                    SectionPrevious.DistanceLeft = 0;
+                }
+                else if (SectionPrevious.Right != null && SectionPrevious.DistanceRight >= 100 && !SectionPrevious.Right.Equipment.IsBroken)
+                {
+                    SectionCurrent.Left = SectionPrevious.Right;
+                    SectionPrevious.Right = null;
+                    SectionPrevious.DistanceRight = 0;
+                }
+            }
+            else if (SectionCurrent.Left != null && !SectionCurrent.Left.Equipment.IsBroken)
+            {
+                int performanceL = SectionCurrent.Left.Equipment.Performance;
+                int speedL = SectionCurrent.Left.Equipment.Speed;
+                int actualSpeedL = speedL * performanceL;
+                SectionCurrent.DistanceLeft += actualSpeedL;
+            }
+        }
+
+        private void MoveRightParticipant(SectionData SectionCurrent, SectionData SectionPrevious)
+        {
+            //if sdC.Right is empty you want a driver to be able to go there
+            if (SectionCurrent.Right == null)
+            {
+                //but only if he has driven more than 100 meters
+                //comming from the previous section's right
+                if (SectionPrevious.Right != null && SectionPrevious.DistanceRight >= 100 && !SectionPrevious.Right.Equipment.IsBroken)
+                {
+                    SectionCurrent.Right = SectionPrevious.Right;
+                    SectionCurrent.DistanceRight = SectionPrevious.DistanceRight - 100;
+                    SectionPrevious.Right = null;
+                    SectionPrevious.DistanceRight = 0;
+                }
+                //he can also come from the previous section's left
+                else if (SectionPrevious.Left != null && SectionPrevious.DistanceLeft >= 100 && !SectionPrevious.Left.Equipment.IsBroken)
+                {
+                    SectionCurrent.Right = SectionPrevious.Left;
+                    SectionCurrent.DistanceRight = SectionPrevious.DistanceLeft - 100;
+                    SectionPrevious.Left = null;
+                    SectionPrevious.DistanceLeft = 0;
+                }
+            }
+            //is the section not free, keep driving on this section
+            else if (SectionCurrent.Right != null && !SectionCurrent.Right.Equipment.IsBroken)
+            {
+                int performanceR = SectionCurrent.Right.Equipment.Performance;
+                int speedR = SectionCurrent.Right.Equipment.Speed;
+                int actualSpeedR = speedR * performanceR;
+
+                SectionCurrent.DistanceRight += actualSpeedR;
             }
         }
 
